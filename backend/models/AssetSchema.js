@@ -1,4 +1,4 @@
-const mogoose = require('mongoose');
+const mongoose = require('mongoose');
 const assetSchema = new mogoose.Schema({
     assetTag:{
         type: String,
@@ -19,9 +19,9 @@ const assetSchema = new mogoose.Schema({
         type: String,
         required: true
     },
-    model:{
-        model: String,
-        default: ''
+    model: {
+        type: String,
+        default: ' '
     },
     serialNumber:{
         type:String,
@@ -59,3 +59,5 @@ const assetSchema = new mogoose.Schema({
 
 
 })
+
+module.exports = mongoose.model('Asset', assetSchema);
