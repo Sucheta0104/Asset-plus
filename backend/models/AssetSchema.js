@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const assetSchema = new mogoose.Schema({
+const assetSchema = new mongoose.Schema({
     assetTag:{
         type: String,
         required: true,

@@ -1,59 +1,53 @@
 const Asset = require("../models/AssetSchema");
 
-//Create new Asset
+// Create new Asset
 exports.createAsset = async (req, res) => {
   try {
     const asset = new Asset(req.body);
     await asset.save();
     res.status(201).json(asset);
-  } catch {
+  } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
 
-//Get all asset
+// Get all assets
 exports.getallAsset = async (req, res) => {
   try {
     const assets = await Asset.find();
     res.status(200).json(assets);
-  } catch {
+  } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-//Get asset by id
-
+// Get asset by ID
 exports.getassetbyID = async (req, res) => {
   try {
-    const asset = await Asset.findbyId(req.params.id);
-
-    if (!asset) {
-      return res.status(404).json({ message: "Asset not found" });
-    }
+    const asset = await Asset.findById(req.params.id);
+    if (!asset) return res.status(404).json({ message: "Asset not found" });
     res.status(200).json(asset);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-//Update asset by id
+// Update asset by ID
 exports.updateasset = async (req, res) => {
-    try {
-        const asset = await Asset.findbyidUpdate(req.params.id,req.body,{new:true});
-        res.status(200).json(asset);
-        
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
+  try {
+    const asset = await Asset.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.status(200).json(asset);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
 
-//Delete asset 
-exports.DeleteAsset = async (req,res)=>{
-    try {
-        const asset = await Asset.findByIdAndDelete(req.params.id);
-        res.status(200).json(asset);
-
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
+// Delete asset by ID
+exports.DeleteAsset = async (req, res) => {
+  try {
+    const asset = await Asset.findByIdAndDelete(req.params.id);
+    res.status(200).json(asset);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
