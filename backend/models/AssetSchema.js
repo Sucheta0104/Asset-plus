@@ -1,0 +1,61 @@
+const mogoose = require('mongoose');
+const assetSchema = new mogoose.Schema({
+    assetTag:{
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    name:{
+        type: String,
+        required: true
+    },
+    category:{
+        type:String,
+        required:true,
+        enum:['Laptop','Destop','Monitor','Phone','Printer','Software','Other']
+    },
+    brand:{
+        type: String,
+        required: true
+    },
+    model:{
+        model: String,
+        default: ''
+    },
+    serialNumber:{
+        type:String,
+        required:true,
+        unique:true,
+        trim: true
+    },
+    purchaseDate:{
+        type:Date,
+        required:true
+    },
+    cost:{
+        type:Number,
+        required: true
+    },
+    vendor:{
+        type:String,
+        required:true,
+        trim: true,
+        default:''
+    },
+    location:{
+        type: String,
+        default:''
+
+    },
+    warrentyExpiry:{
+        type:Date,
+        required: false
+    },
+    description:{
+        type:String,
+        required: false
+    }
+
+
+})
