@@ -4,7 +4,7 @@ require('dotenv').config();
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 // Connect to MongoDB
 connectDB();

@@ -1,5 +1,5 @@
 // middleware/auth.js
-require('dotenv').config(); // load .env
+require('dotenv').config();
 
 
 
