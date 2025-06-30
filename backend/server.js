@@ -14,6 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/asset', assetRoutes);
 
 // Home route
 app.get('/', (req, res) => {
