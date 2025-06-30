@@ -5,7 +5,7 @@ exports.createAsset = async (req, res) => {
   try {
     const asset = new Asset(req.body);
     await asset.save();
-    res.status(201).json(asset);
+    res.status(201).json({message: "Asset created successfully"});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

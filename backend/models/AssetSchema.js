@@ -55,6 +55,15 @@ const assetSchema = new mongoose.Schema({
     description:{
         type:String,
         required: false
+    },
+    status:{
+        type: String,
+        required: true,
+        enum: ['Assigned', 'Available','UnderRepair']
+    },
+    cost:{
+        type: Number,
+        required: true
     }
 
 
