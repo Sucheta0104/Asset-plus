@@ -64,6 +64,14 @@ const assetSchema = new mongoose.Schema({
     cost:{
         type: Number,
         required: true
+    },
+    vehicle:{
+        type: String,
+        required: false
+    },
+    Furniture:{
+        type: String,
+        required: false
     }
 
 
