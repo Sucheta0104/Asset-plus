@@ -1,80 +1,65 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const assetSchema = new mongoose.Schema({
-    assetTag:{
-        type: String,
-        required: true,
-        unique: true,
-        trim: true
-    },
-    name:{
-        type: String,
-        required: true
-    },
-    category:{
-        type:String,
-        required:true,
-        enum:['Laptop','Destop','Monitor','Phone','Printer','Software','Other']
-    },
-    brand:{
-        type: String,
-        required: true
-    },
-    model: {
-        type: String,
-        default: ' '
-    },
-    serialNumber:{
-        type:String,
-        required:true,
-        unique:true,
-        trim: true
-    },
-    purchaseDate:{
-        type:Date,
-        required:true
-    },
-    cost:{
-        type:Number,
-        required: true
-    },
-    vendor:{
-        type:String,
-        required:true,
-        trim: true,
-        default:''
-    },
-    location:{
-        type: String,
-        default:''
+  assetTag: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true,
+    enum: ["IT", "Furniture", "Vehicle"],
+  },
+  brand: {
+    type: String,
+    required: true,
+  },
+  model: {
+    type: String,
+    default: " ",
+  },
+  serialNumber: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  purchaseDate: {
+    type: Date,
+    required: true,
+  },
+  vendor: {
+    type: String,
+    required: true,
+    trim: true,
+    default: "",
+  },
+  location: {
+    type: String,
+    default: "",
+  },
+  warrentyExpiry: {
+    type: Date,
+    required: false,
+  },
+  description: {
+    type: String,
+    required: false,
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ["Assigned", "Available", "UnderRepair"],
+  },
+  cost: {
+    type: Number,
+    required: true,
+  },
+});
 
-    },
-    warrentyExpiry:{
-        type:Date,
-        required: false
-    },
-    description:{
-        type:String,
-        required: false
-    },
-    status:{
-        type: String,
-        required: true,
-        enum: ['Assigned', 'Available','UnderRepair']
-    },
-    cost:{
-        type: Number,
-        required: true
-    },
-    vehicle:{
-        type: String,
-        required: false
-    },
-    Furniture:{
-        type: String,
-        required: false
-    }
-
-
-})
-
-module.exports = mongoose.model('Asset', assetSchema);
+module.exports = mongoose.model("Asset", assetSchema);

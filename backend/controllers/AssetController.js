@@ -14,12 +14,17 @@ exports.createAsset = async (req, res) => {
 // Get all assets
 exports.getallAsset = async (req, res) => {
   try {
-    const assets = await Asset.find();
+    const { category } = req.query;
+
+    // If category is passed, filter by it. Otherwise, return all.
+    const filter = category ? { category } : {};
+    const assets = await Asset.find(filter);
     res.status(200).json(assets);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 // Get asset by ID
 exports.getassetbyID = async (req, res) => {
