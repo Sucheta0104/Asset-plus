@@ -4,7 +4,7 @@ require('dotenv').config();
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const assetRoutes = require('./routes/Assetroute');
-
+const fileRoutes = require('./routes/fileroute');
 
 
 const port = process.env.PORT || 3000;
@@ -18,6 +18,13 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/asset', assetRoutes);
+
+// Static folder for uploaded files
+app.use('/uploads', express.static('uploads'));
+
+// All API routes
+app.use('/api', fileRoutes);
+
 
 // Home route
 app.get('/', (req, res) => {

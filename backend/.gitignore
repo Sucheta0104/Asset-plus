@@ -1,2 +1,8 @@
-./node_modules
-./.env
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Uploads folder (optional: keep if you're storing uploaded files temporarily)
+uploads/
