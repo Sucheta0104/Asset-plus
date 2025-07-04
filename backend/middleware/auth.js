@@ -1,20 +1,26 @@
-// middleware/auth.js
 require('dotenv').config();
 
-
-
 const auth = (req, res, next) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body || {};
 
-  // Load hardcoded credentials from .env
-  const adminEmail = process.env.ADMIN_EMAIL;
-  const adminPassword = process.env.ADMIN_PASSWORD;
+    // Load hardcoded credentials from .env
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
 
-  if (email === adminEmail && password === adminPassword) {
-    req.admin = { email }; // optionally attach admin info
-    next(); // grant access
-  } else {
-    res.status(401).json({ message: "Access denied. Invalid credentials." });
+    // DEBUGGING
+    console.log("Received from client:", email, password);
+    console.log("Expected from .env:", adminEmail, adminPassword);
+
+    if (email === adminEmail && password === adminPassword) {
+      req.admin = { email };
+      next();
+    } else {
+      res.status(401).json({ message: "Access denied. Invalid credentials." });
+    }
+  } catch (error) {
+    console.error('Auth middleware error:', error);
+    res.status(500).json({ message: "Internal server error." });
   }
 };
 

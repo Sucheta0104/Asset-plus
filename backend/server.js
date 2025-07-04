@@ -25,6 +25,9 @@ app.use('/uploads', express.static('uploads'));
 // All API routes
 app.use('/api', fileRoutes);
 
+// Parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
+
 
 // Home route
 app.get('/', (req, res) => {
