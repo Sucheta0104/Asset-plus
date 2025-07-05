@@ -1,10 +1,11 @@
+// routes/auth.js
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
+const { login, register } = require('../controllers/authController');
 
-// Admin login route using hardcoded check inside middleware
-router.post('/login', auth, (req, res) => {
-  return res.status(200).json({ message: 'Welcome Admin' });
-});
+// Use only for initial admin creation, then disable it
+router.post('/register', register);
+
+router.post('/login', login);
 
 module.exports = router;
