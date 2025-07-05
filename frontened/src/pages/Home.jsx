@@ -3,9 +3,9 @@ import Header from '../components/Header'
 import Hero from './Hero'
 import About from './About'
 import FeaturesSection from './Features'
-import Pricing from './Pricing'
 import Contact from './Contact'
 import Footer from '../components/Footer'
+import Testimonial from './Testimonial'
 const Home = () => {
   return (
     <div>
@@ -13,7 +13,7 @@ const Home = () => {
         <Hero/>
         <About/>
         <FeaturesSection/>
-        {/* <Pricing/> */}
+        <Testimonial/>
         <Contact/>
         <Footer/>
     </div>
