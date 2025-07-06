@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/Auth');
 const assetRoutes = require('./routes/Assetroute');
 const fileRoutes = require('./routes/fileroute');
+const cors = require('cors');
 
 
 const port = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // Routes
 app.use('/api/auth', authRoutes);

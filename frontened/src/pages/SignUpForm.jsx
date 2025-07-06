@@ -1,8 +1,12 @@
 // src/components/SignUpForm.jsx
 import React, { useState } from 'react';
 import './shake.css'; // Custom CSS animation file
+import {useNavigate} from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify'; // Uncomment if you want to use toast notifications
 
 const SignUpForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -23,28 +27,38 @@ const SignUpForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { fullName, email, password } = formData;
-
-    const newErrors = {
-      fullName: !fullName,
-      email: !email,
-      password: !password,
-    };
-
-    setErrors(newErrors);
-
-    if (newErrors.fullName || newErrors.email || newErrors.password) return;
-
-    setLoading(true);
-
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert('Account created successfully!');
-      setFormData({ fullName: '', email: '', password: '' });
-    } catch (err) {
-      console.error('Signup error:', err);
-    } finally {
-      setLoading(false);
+      const response = await axios.post('http://localhost:5000/api/auth/login', { email , password });
+      if(response.status === 200) {
+        toast.success('Login successful!'); // Show success message
+        navigate('/dashboard'); // Redirect to dashboard after successful signup
+
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
     }
+
+    // const newErrors = {
+    //   fullName: !fullName,
+    //   email: !email,
+    //   password: !password,
+    // };
+
+    // setErrors(newErrors);
+
+    // if (newErrors.fullName || newErrors.email || newErrors.password) return;
+
+    // setLoading(true);
+
+    // try {
+    //   await new Promise((resolve) => setTimeout(resolve, 2000));
+    //   alert('Account created successfully!');
+    //   setFormData({ fullName: '', email: '', password: '' });
+    // } catch (err) {
+    //   console.error('Signup error:', err);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
@@ -58,8 +72,8 @@ const SignUpForm = () => {
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
-            <input
+            {/* <label className="block text-sm font-medium text-gray-700">Full Name</label> */}
+            {/* <input
               name="fullName"
               type="text"
               value={formData.fullName}
@@ -68,7 +82,7 @@ const SignUpForm = () => {
                 errors.fullName ? 'border-red-500 animate-shake' : 'border-gray-300'
               }`}
               placeholder="Your Name"
-            />
+            /> */}
           </div>
 
           {/* Email */}
@@ -82,7 +96,7 @@ const SignUpForm = () => {
               className={`mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.email ? 'border-red-500 animate-shake' : 'border-gray-300'
               }`}
-              placeholder="you@company.com"
+              placeholder="Enter your email"
             />
           </div>
 
@@ -113,15 +127,15 @@ const SignUpForm = () => {
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z" />
               </svg>
             ) : (
-              'Sign Up'
+              'Sign in'
             )}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        {/* <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{' '}
           <a href="/login" className="text-blue-600 hover:underline">Sign in</a>
-        </p>
+        </p> */}
       </div>
     </div>
   );
