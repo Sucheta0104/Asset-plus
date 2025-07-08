@@ -1,4 +1,3 @@
-// src/components/SignUpForm.jsx
 import React, { useState } from 'react';
 import './shake.css'; // Custom CSS animation file
 import {useNavigate} from 'react-router-dom';
@@ -14,18 +13,19 @@ const SignUpForm = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setErrors((prev) => ({ ...prev, [e.target.name]: false }));
+    setError(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const { fullName, email, password } = formData;
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { email , password });
@@ -63,14 +63,13 @@ const SignUpForm = () => {
 
   return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+      <div className={`max-w-md w-full bg-white p-8 rounded-lg shadow-md transition duration-300 ${error ? 'animate-shake border-red-500 border' : ''}`}>
         <div className="flex flex-col items-center mb-6">
           <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg mb-2"></div>
           <h1 className="text-2xl font-bold text-gray-800">AssetPlus</h1>
-          </div>
-
+          <p className="text-gray-500 text-sm">Create your account</p>
+        </div>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Full Name */}
           <div>
             {/* <label className="block text-sm font-medium text-gray-700">Full Name</label> */}
             {/* <input
@@ -78,14 +77,10 @@ const SignUpForm = () => {
               type="text"
               value={formData.fullName}
               onChange={handleChange}
-              className={`mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.fullName ? 'border-red-500 animate-shake' : 'border-gray-300'
-              }`}
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your Name"
             /> */}
           </div>
-
-          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
@@ -99,8 +94,6 @@ const SignUpForm = () => {
               placeholder="Enter your email"
             />
           </div>
-
-          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
@@ -108,14 +101,10 @@ const SignUpForm = () => {
               type="password"
               value={formData.password}
               onChange={handleChange}
-              className={`mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.password ? 'border-red-500 animate-shake' : 'border-gray-300'
-              }`}
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="••••••••"
             />
           </div>
-
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}

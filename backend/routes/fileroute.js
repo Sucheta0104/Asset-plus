@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const upload = require('../middleware/upload'); // multer setup
+const upload = require('../config/uploads'); // multer setup
 const { uploadFile } = require('../controllers/filecontroller');
 
 // Route: POST /api/upload
