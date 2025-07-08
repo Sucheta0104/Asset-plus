@@ -56,6 +56,11 @@ const assetSchema = new mongoose.Schema({
     required: true,
     enum: ["Assigned", "Available", "UnderRepair"],
   },
+  department: {
+  type: String,
+  required: true,
+  enum: ["IT", "Sales", "Marketing", "HR"],
+},
   cost: {
     type: Number,
     required: true,
