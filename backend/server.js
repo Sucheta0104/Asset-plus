@@ -2,13 +2,14 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const connectDB = require('./config/db');
+const cors = require('cors');
+
+
+// Route imports
 const authRoutes = require('./routes/Auth');
 const assetRoutes = require('./routes/Assetroute');
-const fileRoutes = require('./routes/fileroute');
-const cors = require('cors');
 const assignmentRoutes = require('./routes/assignmentRoute');
-const dashboardRoutes = require('./routes/dashboardRoutes'); 
-
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const port = process.env.PORT || 3000;
 
@@ -18,27 +19,23 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+
+// Static files
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/asset', assetRoutes);
 app.use('/api/assignment', assignmentRoutes);
-app.use('/api/dashboard', require('./routes/dashboardRoutes'));
+app.use('/api/dashboard', dashboardRoutes);
 
-// Static folder for uploaded files
-app.use('/uploads', express.static('uploads'));
-
-// All API routes
-app.use('/api/file', fileRoutes);
-
-// Parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true }));
-
-
-// Home route
+// Default route
 app.get('/', (req, res) => {
   res.send("hello world");
 });
+
+
 
 // Start server
 app.listen(port, () => {
