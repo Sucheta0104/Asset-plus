@@ -13,7 +13,7 @@ const SignUpForm = () => {
     password: '',
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -26,7 +26,7 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { fullName, email, password } = formData;
+    const { email, password } = formData;
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { email , password });
       if(response.status === 200) {
@@ -38,27 +38,7 @@ const SignUpForm = () => {
       console.error('Signup error:', error);
     }
 
-    // const newErrors = {
-    //   fullName: !fullName,
-    //   email: !email,
-    //   password: !password,
-    // };
-
-    // setErrors(newErrors);
-
-    // if (newErrors.fullName || newErrors.email || newErrors.password) return;
-
-    // setLoading(true);
-
-    // try {
-    //   await new Promise((resolve) => setTimeout(resolve, 2000));
-    //   alert('Account created successfully!');
-    //   setFormData({ fullName: '', email: '', password: '' });
-    // } catch (err) {
-    //   console.error('Signup error:', err);
-    // } finally {
-    //   setLoading(false);
-    // }
+    
   };
 
   return (
@@ -70,21 +50,7 @@ const SignUpForm = () => {
           </div>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Full Name */}
-          <div>
-            {/* <label className="block text-sm font-medium text-gray-700">Full Name</label> */}
-            {/* <input
-              name="fullName"
-              type="text"
-              value={formData.fullName}
-              onChange={handleChange}
-              className={`mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.fullName ? 'border-red-500 animate-shake' : 'border-gray-300'
-              }`}
-              placeholder="Your Name"
-            /> */}
-          </div>
-
+          
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>

@@ -3,24 +3,37 @@ import About from "./pages/About";
 import SignUpForm from "./pages/SignUpForm";
 import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
-import { Route,Routes } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import { ToastContainer, toast } from 'react-toastify';
-
+import { Route, Routes } from "react-router-dom";
+import DashboardLayout from "./components/Dashboard/DashboardLayout";
+import DashboardPage from "./components/Dashboard/DashboardPage";
+import Assets from "./components/Dashboard/Assets";
+import Assignment from "./components/Dashboard/Assignment";
+import Maintainance from "./components/Dashboard/Maintainance";
+import Vendor from "./components/Dashboard/Vendor";
+import Reports from "./components/Dashboard/Reports";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
     <>
       <ToastContainer />
-    <Routes>
-      <Route path="/" element={<Home />}></Route>
-      <Route path="/about" element={<About/>}></Route>
-      <Route path="/Pricing" element={<Pricing/>}></Route>
-      <Route path="/Contact" element={<Contact/>}></Route>
-      <Route path="/signup" element={<SignUpForm/>}></Route>
-      <Route path="/dashboard" element={<Dashboard/>}></Route>
-    </Routes>
-     
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/Pricing" element={<Pricing />} />
+        <Route path="/Contact" element={<Contact />} />
+        <Route path="/signup" element={<SignUpForm />} />
+
+        {/* Dashboard Layout with nested routes */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardPage />} />
+          <Route path="assets" element={<Assets />} />
+          <Route path="assignment" element={<Assignment />} />
+          <Route path="maintainance" element={<Maintainance />} />
+          <Route path="vendor" element={<Vendor />} />
+          <Route path="reports" element={<Reports />} />
+        </Route>
+      </Routes>
     </>
   );
 }

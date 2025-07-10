@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
 import FAQSection from '../components/FAQ';
 
 export default function Pricing() {
@@ -8,34 +11,36 @@ export default function Pricing() {
     {
       name: 'Basic',
       description: 'Perfect for small teams getting started',
-      monthlyPrice: 30,
-      annualPrice: 24,
+      monthlyPrice: 0,
+      annualPrice: 0,
       features: ['Up to 500 assets', '5 team members', 'Basic reporting', 'Email support'],
     },
     {
       name: 'Pro',
       description: 'Best for growing IT teams',
-      monthlyPrice: 81,
-      annualPrice: 65,
+      monthlyPrice: 49,
+      annualPrice: 99,
       features: ['Up to 2,000 assets', '15 team members', 'Advanced reporting & analytics', 'Priority support'],
       popular: true,
     },
     {
       name: 'Enterprise',
       description: 'For large organizations with complex needs',
-      monthlyPrice: 206,
-      annualPrice: 165,
+      monthlyPrice: 149,
+      annualPrice: 349,
       features: ['Unlimited assets', 'Unlimited team members', 'Custom reporting & dashboards', '24/7 dedicated support'],
     },
   ];
 
-  const calculateSavings = (monthly, annual) => {
-    const annualTotal = annual * 12;
-    const monthlyTotal = monthly * 12;
-    return Math.round(((monthlyTotal - annualTotal) / monthlyTotal) * 100);
-  };
+  // const calculateSavings = (monthly, annual) => {
+  //   const annualTotal = annual * 12;
+  //   const monthlyTotal = monthly * 12;
+  //   return Math.round(((monthlyTotal - annualTotal) / monthlyTotal) * 100);
+  // };
 
   return (
+    <div>
+    <Header/>
     <section className="py-20 px-6 bg-gray-50 text-center">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
@@ -149,6 +154,7 @@ export default function Pricing() {
 
     </section>
     </section>
-  
-  );
+    <Footer/>
+    </div>
+    );
 }

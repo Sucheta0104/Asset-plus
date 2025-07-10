@@ -1,9 +1,14 @@
 import { EnvelopeIcon, UserIcon, PencilIcon } from '@heroicons/react/24/outline';
 import ButtonCrossArrow from "../ui/Contact-btn";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
 
 export default function Contact() {
   return (
-    <section className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-50 py-16 px-4 flex items-center justify-center">
+    <div>
+      <Header/>
+    <section className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-50 py-16 px-4 flex items-center justify-center my-10">
       <div className="w-full max-w-4xl bg-white shadow-2xl rounded-3xl p-10 md:p-16 transition-all">
         <h2 className="text-4xl font-bold text-center text-gray-800 mb-10">Get in Touch</h2>
 
@@ -57,5 +62,6 @@ export default function Contact() {
         </form>
       </div>
     </section>
+    </div>
   );
 }
