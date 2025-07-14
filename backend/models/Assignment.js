@@ -31,6 +31,15 @@ const assignmentSchema = new mongoose.Schema({
         type:String,
         trim : true
     },
+    returnedDate: {
+    type: Date,
+    default: null
+  },
+  assignedBy: {
+    type: String,
+    required: true,
+    trim: true
+  },
     status: {
     type: String,
     enum: ['Active', 'Returned'],

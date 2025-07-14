@@ -82,3 +82,34 @@ exports.deleteAssignment = async (req, res) => {
       .json({ message: "Error deleting assignment", error: error.message });
   }
 };
+
+
+// Get only returned assignments
+exports.getReturnedAssignments = async (req, res) => {
+  try {
+    const returned = await Assignment.find({ status: "Returned" }).populate("assetId");
+    res.status(200).json(returned);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch returned records", error: error.message });
+  }
+};
+
+// Get assignments filtered by status (Active, Returned, or All)
+exports.getAssignmentsByStatus = async (req, res) => {
+  try {
+    const { status } = req.query;
+
+    let filter = {};
+    if (status && status !== "All") {
+      filter.status = status; // Only apply filter if not "All"
+    }
+
+    const assignments = await Assignment.find(filter).populate("assetId");
+    res.status(200).json(assignments);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch assignments by status",
+      error: error.message,
+    });
+  }
+};

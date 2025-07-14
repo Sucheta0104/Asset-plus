@@ -1,10 +1,33 @@
 const Asset = require("../models/AssetSchema");
+const Activity = require("../models/ActivitySchema");
+const Alert = require("../models/AlertSchema");
 
 // Create new Asset
 exports.createAsset = async (req, res) => {
   try {
     const asset = new Asset(req.body);
     await asset.save();
+
+    // Create activity log
+    await Activity.create({
+      message: `New asset created: ${asset.name} (${asset.assetTag})`,
+      type: 'asset'
+    })
+
+    // 2. Check for upcoming warranty expiry
+    const today = new Date();
+    const expiryDate = new Date(asset.warrentyExpiry);
+    const diffInDays = (expiryDate - today) / (1000 * 60 * 60 * 24);
+
+    if (diffInDays <= 30 && diffInDays >= 0) {
+      await Alert.create({
+        title: `Warranty Expiring Soon for ${asset.name}`,
+        description: `Asset ${asset.assetTag} warranty expires on ${expiryDate.toDateString()}`,
+        level: 'warning',
+        expireAt: expiryDate
+      });
+    }
+
     res.status(201).json({message: "Asset created successfully"});
   } catch (err) {
     res.status(400).json({ message: err.message });

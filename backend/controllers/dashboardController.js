@@ -1,5 +1,7 @@
 const Asset = require('../models/AssetSchema');
 const moment = require('moment');
+const Activity = require('../models/ActivitySchema')
+const Alert = require('../models/AlertSchema')
 
 // Summary endpoint: total, assigned, underRepair, AMC due
 exports.getDashboardSummary = async (req, res) => {
@@ -60,3 +62,28 @@ exports.getDepartmentAllocation = async (req, res) => {
     });
   }
 };
+
+
+//get last 5 activities
+exports.getLastActivities = async (req,res)=>{
+    try {
+        const activities = await Activity.find().sort({createdAt:-1}).limit(5);
+        res.status(200).json(activities);
+    } catch (error) {
+        res.status(500).json({
+            error:'Error Fetching Activities'
+        })
+    }
+}
+
+//Get active alerts
+exports.getAlerts = async (req,res)=>{
+    try {
+        const alerts = await Alert.find({expiresAt:{$gt:new Date()}}).sort({createdAt:-1});
+        res.status(200).json(alerts);
+    } catch (error) {
+        res.status(500).json({
+            error:'Failed to fetch alerts'
+        })
+    }
+}
