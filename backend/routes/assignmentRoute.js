@@ -18,4 +18,11 @@ router.put('/:id', AssignmentController.updateAssignment);
 // DELETE /api/assignment/:id
 router.delete('/:id', AssignmentController.deleteAssignment);
 
+// GET /api/assignment/returned
+router.get("/returned", AssignmentController.getReturnedAssignments);
+
+// GET /api/assignment/filter/status?status=Active or Returned or All
+router.get('/filter/status', AssignmentController.getAssignmentsByStatus);
+
+
 module.exports = router;
