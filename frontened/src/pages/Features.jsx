@@ -30,10 +30,12 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section className="bg-gray-100 py-16 px-6 h-125">
+    <section className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h2 className="text-4xl font-bold text-gray-900">Everything you need to manage IT assets</h2>
-        <p className="mt-4 text-gray-600 text-lg">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+          Everything you need to manage IT assets
+        </h2>
+        <p className="mt-4 text-gray-600 text-base sm:text-lg">
           Powerful features designed to simplify asset management and boost your team's productivity.
         </p>
       </div>
@@ -41,11 +43,13 @@ export default function FeaturesSection() {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="bg-blue-600/80 text-white rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.3)] p-6 text-left transform transition-transform duration-300 hover:scale-105 hover:shadow-[0_15px_35px_rgba(59,130,246,0.5)]"
+            className="bg-blue-600/90 text-white rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.2)] p-6 sm:p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-[0_15px_35px_rgba(59,130,246,0.5)]"
           >
-            <feature.icon className="h-10 w-10 mb-4" />
-            <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-            <p className="text-sm">{feature.description}</p>
+            <div className="flex items-center justify-center h-10 w-15 rounded-full bg-white/10 mb-4">
+              <feature.icon className="h-8 w-8 text-white" />
+            </div>
+            <h3 className="text-lg sm:text-xl font-semibold mb-2">{feature.title}</h3>
+            <p className="text-sm sm:text-base">{feature.description}</p>
           </div>
         ))}
       </div>

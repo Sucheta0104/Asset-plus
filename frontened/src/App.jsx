@@ -12,6 +12,8 @@ import Maintainance from "./components/Dashboard/Maintainance";
 import Vendor from "./components/Dashboard/Vendor";
 import Reports from "./components/Dashboard/Reports";
 import { ToastContainer } from 'react-toastify';
+import AssignmentHistory from "./components/Dashboard/AssignmentHistory";
+import Addasset from "./components/Dashboard/Addasset";
 
 function App() {
   return (
@@ -27,8 +29,15 @@ function App() {
         {/* Dashboard Layout with nested routes */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardPage />} />
-          <Route path="assets" element={<Assets />} />
-          <Route path="assignment" element={<Assignment />} />
+          <Route path="assets">
+            <Route index element={<Assets/>}/>
+            <Route path="addasset" element={<Addasset/>}/>
+            </Route> 
+          {/* <Route path="assets" element={<Assets/>} /> */}
+          <Route path="assignment">
+            <Route index element={<Assignment />} />
+            <Route path="assignmenthistory" element={<AssignmentHistory />} />
+          </Route>
           <Route path="maintainance" element={<Maintainance />} />
           <Route path="vendor" element={<Vendor />} />
           <Route path="reports" element={<Reports />} />

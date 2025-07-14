@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Plus, Search, Filter, Eye, Edit2, Download, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const AssetManagement = () => {
   const [assets, setAssets] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -19,10 +20,10 @@ const AssetManagement = () => {
   const categories = ['Laptop', 'Mobile Device', 'Printer', 'Monitor', 'Keyboard', 'Mouse', 'Tablet', 'Server', 'Other'];
   const statuses = ['Available', 'Assigned', 'Under Repair', 'Retired'];
 
-  const generateAssetTag = () => {
-    const nextId = assets.length + 1;
-    return `AST-${nextId.toString().padStart(3, '0')}`;
-  };
+  // const generateAssetTag = () => {
+  //   const nextId = assets.length + 1;
+  //   return `AST-${nextId.toString().padStart(3, '0')}`;
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,33 +33,33 @@ const AssetManagement = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
     
-    if (!formData.name || !formData.category || !formData.status || !formData.location || !formData.purchaseDate || !formData.cost) {
-      alert('Please fill in all required fields');
-      return;
-    }
+  //   if (!formData.name || !formData.category || !formData.status || !formData.location || !formData.purchaseDate || !formData.cost) {
+  //     alert('Please fill in all required fields');
+  //     return;
+  //   }
 
-    const newAsset = {
-      id: Date.now(),
-      assetTag: generateAssetTag(),
-      ...formData,
-      cost: parseFloat(formData.cost)
-    };
+  //   const newAsset = {
+  //     id: Date.now(),
+  //     assetTag: generateAssetTag(),
+  //     ...formData,
+  //     cost: parseFloat(formData.cost)
+  //   };
 
-    setAssets(prev => [...prev, newAsset]);
-    setFormData({
-      name: '',
-      category: '',
-      status: '',
-      assignedTo: '',
-      location: '',
-      purchaseDate: '',
-      cost: ''
-    });
-    setShowAddForm(false);
-  };
+  //   setAssets(prev => [...prev, newAsset]);
+  //   setFormData({
+  //     name: '',
+  //     category: '',
+  //     status: '',
+  //     assignedTo: '',
+  //     location: '',
+  //     purchaseDate: '',
+  //     cost: ''
+  //   });
+  //   setShowAddForm(false);
+  // };
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this asset?')) {
@@ -83,6 +84,7 @@ const AssetManagement = () => {
   };
 
   return (
+    <div className="container">
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -91,13 +93,13 @@ const AssetManagement = () => {
             <h1 className="text-3xl font-bold text-gray-900">Assets</h1>
             <p className="text-gray-600 mt-1">Manage and track all your IT assets</p>
           </div>
-          <button
-            onClick={() => setShowAddForm(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-          >
-            <Plus size={16} />
-            Add Asset
-          </button>
+                <Link
+                    to="/dashboard/assets/addasset"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                  >
+                    <Plus size={16} />
+                   Add Asset
+                </Link>
         </div>
 
         {/* Add Asset Form Modal */}
@@ -202,13 +204,13 @@ const AssetManagement = () => {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <button
-                    type="submit"
+                  <Link
+                    to="/dashboard/assets/addasset"
                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors"
                   >
-                    Add Asset
-                  </button>
-                  <button
+                    Add Asset</Link> 
+                  
+                   <button
                     type="button"
                     onClick={() => setShowAddForm(false)}
                     className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-md transition-colors"
@@ -325,6 +327,7 @@ const AssetManagement = () => {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 };

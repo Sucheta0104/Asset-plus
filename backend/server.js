@@ -6,6 +6,8 @@ const authRoutes = require('./routes/Auth');
 const assetRoutes = require('./routes/Assetroute');
 const fileRoutes = require('./routes/fileroute');
 const cors = require('cors');
+const assignmentRoutes = require('./routes/assignmentRoute');
+const dashboardRoutes = require('./routes/dashboardRoutes'); 
 
 
 const port = process.env.PORT || 3000;
@@ -20,12 +22,14 @@ app.use(cors());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/asset', assetRoutes);
+app.use('/api/assignment', assignmentRoutes);
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
 // Static folder for uploaded files
 app.use('/uploads', express.static('uploads'));
 
 // All API routes
-app.use('/api', fileRoutes);
+app.use('/api/file', fileRoutes);
 
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));

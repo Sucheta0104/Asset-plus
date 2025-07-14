@@ -23,7 +23,7 @@ const Sidebar = () => {
     { name: 'Assets', icon: Package, path: '/dashboard/assets', end: true },
     { name: 'Assignment', icon: UserCheck, path: '/dashboard/assignment', end: true },
     { name: 'Vendor', icon: Building2, path: '/dashboard/vendor', end: true },
-    { name: 'Maintenance', icon: Wrench, path: '/dashboard/maintenance', end: true },
+    { name: 'Maintainance', icon: Wrench, path: '/dashboard/maintainance', end: true },
     { name: 'Reports', icon: BarChart3, path: '/dashboard/reports', end: true }
   ];
  
