@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './shake.css'; // Custom CSS animation file
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify'; // Uncomment if you want to use toast notifications
@@ -7,12 +6,11 @@ import { toast } from 'react-toastify'; // Uncomment if you want to use toast no
 const SignUpForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
+   email: '',
     password: '',
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [error, setError] = useState(false);
 
   const handleChange = (e) => {
@@ -26,7 +24,7 @@ const SignUpForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { fullName, email, password } = formData;
+    const {email, password } = formData;
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { email , password });
       if(response.status === 200) {
@@ -38,27 +36,7 @@ const SignUpForm = () => {
       console.error('Signup error:', error);
     }
 
-    // const newErrors = {
-    //   fullName: !fullName,
-    //   email: !email,
-    //   password: !password,
-    // };
-
-    // setErrors(newErrors);
-
-    // if (newErrors.fullName || newErrors.email || newErrors.password) return;
-
-    // setLoading(true);
-
-    // try {
-    //   await new Promise((resolve) => setTimeout(resolve, 2000));
-    //   alert('Account created successfully!');
-    //   setFormData({ fullName: '', email: '', password: '' });
-    // } catch (err) {
-    //   console.error('Signup error:', err);
-    // } finally {
-    //   setLoading(false);
-    // }
+    
   };
 
   return (
@@ -71,15 +49,6 @@ const SignUpForm = () => {
         </div>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            {/* <label className="block text-sm font-medium text-gray-700">Full Name</label> */}
-            {/* <input
-              name="fullName"
-              type="text"
-              value={formData.fullName}
-              onChange={handleChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Your Name"
-            /> */}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
@@ -89,7 +58,7 @@ const SignUpForm = () => {
               value={formData.email}
               onChange={handleChange}
               className={`mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.email ? 'border-red-500 animate-shake' : 'border-gray-300'
+                error.email ? 'border-red-500 animate-shake' : 'border-gray-300'
               }`}
               placeholder="Enter your email"
             />
@@ -120,12 +89,7 @@ const SignUpForm = () => {
             )}
           </button>
         </form>
-
-        {/* <p className="mt-4 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <a href="/login" className="text-blue-600 hover:underline">Sign in</a>
-        </p> */}
-      </div>
+        </div>
     </div>
   );
 };

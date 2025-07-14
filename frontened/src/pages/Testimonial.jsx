@@ -162,7 +162,7 @@ const Testimonial = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center mt-12">
+        <div className="text-center  my-15">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">
             Ready to Transform Your Asset Management?
           </h3>
