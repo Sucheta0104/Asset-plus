@@ -113,3 +113,26 @@ exports.getAssignmentsByStatus = async (req, res) => {
     });
   }
 };
+
+// Get assignment summary: total, active, returned, and available assets
+exports.getAssignmentSummary = async (req, res) => {
+  try {
+    const total = await Assignment.countDocuments();
+    const active = await Assignment.countDocuments({ status: "Active" });
+    const returned = await Assignment.countDocuments({ status: "Returned" });
+    const availableAssets = await Asset.countDocuments({ status: "Available" });
+
+    res.status(200).json({
+      totalAssignments: total,
+      activeAssignments: active,
+      returnedAssignments: returned,
+      availableAssets: availableAssets
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch assignment summary",
+      error: error.message,
+    });
+  }
+};
+

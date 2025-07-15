@@ -24,5 +24,9 @@ router.get("/returned", AssignmentController.getReturnedAssignments);
 // GET /api/assignment/filter/status?status=Active or Returned or All
 router.get('/filter/status', AssignmentController.getAssignmentsByStatus);
 
+// GET /api/assignment/summary
+router.get('/summary', AssignmentController.getAssignmentSummary);
+
+
 
 module.exports = router;
