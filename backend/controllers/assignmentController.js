@@ -136,3 +136,25 @@ exports.getAssignmentSummary = async (req, res) => {
   }
 };
 
+// Search assignments by employeeName, employeeId or department
+exports.searchAssignments = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    const results = await Assignment.find({
+      $or: [
+        { employeeName: { $regex: query, $options: "i" } },
+        { employeeId: { $regex: query, $options: "i" } },
+        { department: { $regex: query, $options: "i" } }
+      ]
+    }).populate("assetId");
+
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).json({
+      message: "Search failed",
+      error: error.message,
+    });
+  }
+};
+
