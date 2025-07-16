@@ -6,7 +6,8 @@ const {
   getAllMaintenance,
   getMaintenanceById,
   updateMaintenance,
-  deleteMaintenance
+  deleteMaintenance,
+  getMaintenanceSummary
 } = require('../controllers/maintenanceController');
 
 //  Create a new maintenance record
@@ -26,5 +27,8 @@ router.put('/:id', updateMaintenance);
 
 //  Delete maintenance record by ID
 router.delete('/:id', deleteMaintenance);
+
+//  New route to fetch full history + summary
+router.get('/summary/all', getMaintenanceSummary);
 
 module.exports = router;

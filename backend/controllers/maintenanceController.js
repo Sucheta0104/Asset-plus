@@ -62,3 +62,24 @@ exports.deleteMaintenance = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete maintenance record' });
   }
 };
+
+// View Maintenance History Summary
+exports.getMaintenanceSummary = async (req, res) => {
+  try {
+    const logs = await Maintenance.find().sort({ maintenanceDate: -1 });
+
+    const totalLogs = logs.length;
+    const totalCost = logs.reduce((sum, log) => sum + (log.serviceCost || 0), 0);
+    const followUpCount = logs.filter(log => log.assetStatus === 'Needs Follow-up').length;
+
+    res.status(200).json({
+      totalLogs,
+      totalCost,
+      followUpCount,
+      logs, // send full history too
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch maintenance summary' });
+  }
+};
+
