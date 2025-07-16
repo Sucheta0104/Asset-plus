@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Users, Wrench, Clock, FileText, Settings, Package, UserPlus, TrendingUp } from 'lucide-react';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const Dashboard = () => {
   const [assets, setAssets] = useState([]);
@@ -16,44 +18,50 @@ const Dashboard = () => {
   const departments = ['IT Department', 'Sales', 'Marketing', 'HR'];
   const statuses = ['available', 'assigned', 'under-repair', 'amc-due'];
   const categories = ['laptop', 'desktop', 'monitor', 'printer', 'server', 'phone', 'tablet'];
+  
+  useEffect(()=>{
+    fetch('http://localhost:5000/api/asset/')
+    .then(res=>res.json())
+    .then(data=>setAssets(data))
+  },[]);
 
-  const addAsset = () => {
-    if (newAsset.name && newAsset.department) {
-      const asset = {
-        ...newAsset,
-        id: Date.now(),
-        createdAt: new Date().toISOString(),
-      };
-      setAssets([...assets, asset]);
-      setNewAsset({
-        name: '',
-        department: '',
-        assignedTo: '',
-        status: 'available',
-        category: 'laptop'
-      });
-      setIsAddingAsset(false);
-    }
-  };
+  // const addAsset = () => {
+  //   if (newAsset.name && newAsset.department) {
+  //     const asset = {
+  //       ...newAsset,
+  //       id: Date.now(),
+  //       createdAt: new Date().toISOString(),
+  //     };
+  //     setAssets([...assets, asset]);
+  //     setNewAsset({
+  //       name: '',
+  //       department: '',
+  //       assignedTo: '',
+  //       status: 'available',
+  //       category: 'laptop'
+  //     });
+  //     setIsAddingAsset(false);
+  //   }
+  // };
 
-  const updateAssetStatus = (id, newStatus, assignedTo = '') => {
-    setAssets(assets.map(asset => 
-      asset.id === id 
-        ? { ...asset, status: newStatus, assignedTo } 
-        : asset
-    ));
-  };
+  // const updateAssetStatus = (id, newStatus, assignedTo = '') => {
+  //   setAssets(assets.map(asset => 
+  //     asset.id === id 
+  //       ? { ...asset, status: newStatus, assignedTo } 
+  //       : asset
+  //   ));
+  // };
 
-  const deleteAsset = (id) => {
-    setAssets(assets.filter(asset => asset.id !== id));
-  };
+  // const deleteAsset = (id) => {
+  //   setAssets(assets.filter(asset => asset.id !== id));
+  // };
 
   // Calculate statistics
   const totalAssets = assets.length;
-  const assignedAssets = assets.filter(asset => asset.status === 'assigned').length;
-  const underRepair = assets.filter(asset => asset.status === 'under-repair').length;
+  const assignedAssets = assets.filter(asset => asset.status === 'Assigned').length;
+  const underRepair = assets.filter(asset => asset.status === 'UnderRepair').length;
   const amcDue = assets.filter(asset => asset.status === 'amc-due').length;
-  const criticalRepairs = assets.filter(asset => asset.status === 'under-repair' && asset.priority === 'critical').length;
+  const criticalRepairs = assets.filter(asset => asset.status === 'UnderRepair' && asset.priority === 'critical').length;
   const utilizationRate = totalAssets > 0 ? Math.round((assignedAssets / totalAssets) * 100) : 0;
 
   // Department allocation
@@ -265,7 +273,7 @@ const Dashboard = () => {
         </div>
 
         {/* Assets List */}
-        {assets.length > 0 && (
+        {/* {assets.length > 0 && (
           <div className="mt-8">
             <div className="bg-white rounded-lg p-6 shadow-sm">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Your Assets</h2>
@@ -276,7 +284,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Add Asset Modal */}
         {isAddingAsset && (
