@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, DollarSign, MapPin, Package, Tag, User, Building, Hash, Monitor, Eye } from 'lucide-react';
+import { ArrowLeft, Calendar, DollarSign, MapPin, Package, Tag, User, Building, Hash, Monitor, Eye, DessertIcon, Table } from 'lucide-react';
 
 export default function AddAssetForm() {
   const [formData, setFormData] = useState({
@@ -13,12 +13,13 @@ export default function AddAssetForm() {
     cost: '',
     vendor: '',
     location: '',
-    warrantyExpiry: ''
+    warrantyExpiry: '',
+    description:''
   });
 
   const [focusedField, setFocusedField] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  // const [showPreview, setShowPreview] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -43,43 +44,43 @@ export default function AddAssetForm() {
     return formData.assetTag && formData.assetName && formData.category;
   };
 
-  const getFilledFields = () => {
-    return Object.entries(formData).filter(([key, value]) => value.trim() !== '');
-  };
+  // const getFilledFields = () => {
+  //   return Object.entries(formData).filter(([ value]) => value.trim() !== '');
+  // };
 
-  const getFieldLabel = (key) => {
-    const labels = {
-      assetTag: 'Asset Tag',
-      assetName: 'Asset Name',
-      category: 'Category',
-      brand: 'Brand',
-      model: 'Model',
-      serialNumber: 'Serial Number',
-      purchaseDate: 'Purchase Date',
-      cost: 'Cost',
-      vendor: 'Vendor',
-      location: 'Location',
-      warrantyExpiry: 'Warranty Expiry'
-    };
-    return labels[key] || key;
-  };
+  // const getFieldLabel = (key) => {
+  //   const labels = {
+  //     assetTag: 'Asset Tag',
+  //     assetName: 'Asset Name',
+  //     category: 'Category',
+  //     brand: 'Brand',
+  //     model: 'Model',
+  //     serialNumber: 'Serial Number',
+  //     purchaseDate: 'Purchase Date',
+  //     cost: 'Cost',
+  //     vendor: 'Vendor',
+  //     location: 'Location',
+  //     warrantyExpiry: 'Warranty Expiry'
+  //   };
+  //   return labels[key] || key;
+  // };
 
-  const getFieldIcon = (key) => {
-    const icons = {
-      assetTag: Tag,
-      assetName: Package,
-      category: Monitor,
-      brand: Building,
-      model: Package,
-      serialNumber: Hash,
-      purchaseDate: Calendar,
-      cost: DollarSign,
-      vendor: User,
-      location: MapPin,
-      warrantyExpiry: Calendar
-    };
-    return icons[key] || Package;
-  };
+  // const getFieldIcon = (key) => {
+  //   const icons = {
+  //     assetTag: Tag,
+  //     assetName: Package,
+  //     category: Monitor,
+  //     brand: Building,
+  //     model: Package,
+  //     serialNumber: Hash,
+  //     purchaseDate: Calendar,
+  //     cost: DollarSign,
+  //     vendor: User,
+  //     location: MapPin,
+  //     warrantyExpiry: Calendar
+  //   };
+  //   return icons[key] || Package;
+  // };
 
   const InputField = ({ 
     label, 
@@ -117,10 +118,10 @@ export default function AddAssetForm() {
     </div>
   );
 
-  const filledFields = getFilledFields();
+  // const filledFields = getFilledFields();
 
   return (
-    <div className="container">
+   <div className="container">
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -134,7 +135,7 @@ export default function AddAssetForm() {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Asset</h1>
               <p className="text-gray-600">Create a new asset record</p>
             </div>
-            {filledFields.length > 0 && (
+            {/* {filledFields.length > 0 && (
               <button
                 onClick={() => setShowPreview(!showPreview)}
                 className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
@@ -142,11 +143,11 @@ export default function AddAssetForm() {
                 <Eye className="h-4 w-4" />
                 <span>{showPreview ? 'Hide Preview' : 'Show Preview'}</span>
               </button>
-            )}
+            )} */}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8"> */}
           {/* Form */}
           <div className="bg-white rounded-2xl shadow-xl p-8 animate-slide-up">
             <div className="space-y-8">
@@ -242,6 +243,15 @@ export default function AddAssetForm() {
                     icon={Calendar}
                   />
                 </div>
+                <div className="md:col-span-2">
+                  <InputField
+                    label="Description"
+                    name="description"
+                    type="textarea"
+                    placeholder="Additional Details about the asset"
+                    icon={Table}
+                  />
+                </div>
               </div>
 
               {/* Submit Button */}
@@ -249,7 +259,7 @@ export default function AddAssetForm() {
                 <button
                   onClick={handleSubmit}
                   disabled={!isFormValid() || isSubmitting}
-                  className={`w-full py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 transform ${
+                  className={` py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 transform ${
                     isFormValid() && !isSubmitting
                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.02] shadow-lg hover:shadow-xl'
                       : 'bg-gray-400 cursor-not-allowed'
@@ -266,10 +276,10 @@ export default function AddAssetForm() {
                 </button>
               </div>
             </div>
-          </div>
+          {/* </div> */}
 
           {/* Preview Panel */}
-          {filledFields.length > 0 && (
+          {/* {filledFields.length > 0 && (
             <div className={`bg-white rounded-2xl shadow-xl p-8 animate-slide-up transition-all duration-500 ${
               showPreview ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none lg:opacity-100 lg:scale-100 lg:pointer-events-auto'
             }`}>
@@ -321,7 +331,7 @@ export default function AddAssetForm() {
                 </div>
               )}
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
@@ -374,5 +384,6 @@ export default function AddAssetForm() {
       `}</style>
     </div>
     </div>
+    
   );
 }

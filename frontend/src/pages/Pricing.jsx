@@ -93,7 +93,7 @@ export default function Pricing() {
 
                   <div className="mb-4">
                     <p className="text-3xl font-extrabold text-gray-900 mb-1">
-                      ${currentPrice}
+                      {currentPrice}
                       <span className="text-base font-medium">/month</span>
                     </p>
                     <p className="text-sm text-gray-500">
@@ -103,7 +103,7 @@ export default function Pricing() {
                     </p>
                     {!isAnnual && (
                       <p className="text-sm text-green-600 font-medium mt-1">
-                        Save ${(plan.monthlyPrice - plan.annualPrice) * 12}/year with annual billing
+                        Save {(plan.monthlyPrice - plan.annualPrice) * 12}/year with annual billing
                       </p>
                     )}
                   </div>

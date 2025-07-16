@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Plus, Users, Wrench, Clock, FileText, Settings, Package, UserPlus, TrendingUp } from 'lucide-react';
 
 const Dashboard = () => {
@@ -218,8 +219,8 @@ const Dashboard = () => {
             <div className="bg-white rounded-lg p-6 shadow-sm">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
               <div className="space-y-4">
-                <button 
-                  onClick={() => setIsAddingAsset(true)}
+                <Link
+                 to="/dashboard/assets"
                   className="w-full flex items-center p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 transform hover:scale-105"
                 >
                   <Plus className="w-5 h-5 mr-3" />
@@ -227,31 +228,37 @@ const Dashboard = () => {
                     <div className="font-medium">Add Asset</div>
                     <div className="text-sm text-blue-100">Register new equipment</div>
                   </div>
-                </button>
+                </Link>
                 
-                <button className="w-full flex items-center p-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 transform hover:scale-105">
+                <Link
+                to="/dashboard/assignment"
+                 className="w-full flex items-center p-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 transform hover:scale-105">
                   <UserPlus className="w-5 h-5 mr-3" />
                   <div className="text-left">
                     <div className="font-medium">Assign Asset</div>
                     <div className="text-sm text-green-100">Assign to employee</div>
                   </div>
-                </button>
+                </Link>
                 
-                <button className="w-full flex items-center p-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-200 transform hover:scale-105">
+                <Link 
+                to="/dashboard/reports"
+                className="w-full flex items-center p-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-200 transform hover:scale-105">
                   <FileText className="w-5 h-5 mr-3" />
                   <div className="text-left">
                     <div className="font-medium">Create Report</div>
                     <div className="text-sm text-purple-100">Generate audit report</div>
                   </div>
-                </button>
+                </Link>
                 
-                <button className="w-full flex items-center p-4 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200 transform hover:scale-105">
+                <Link
+                to="/dashboard/maintainance"
+                className="w-full flex items-center p-4 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200 transform hover:scale-105">
                   <Settings className="w-5 h-5 mr-3" />
                   <div className="text-left">
                     <div className="font-medium">Log Maintenance</div>
                     <div className="text-sm text-orange-100">Record repair activity</div>
                   </div>
-                </button>
+                </Link>
               </div>
             </div>
           </div>
