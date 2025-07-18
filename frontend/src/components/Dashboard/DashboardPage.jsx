@@ -14,7 +14,7 @@ const Dashboard = () => {
     status: 'available',
     category: 'laptop'
   });
-
+ const [departmentAllocation, setDepartmentAllocation] = useState([]);
   const departments = ['IT Department', 'Sales', 'Marketing', 'HR'];
   const statuses = ['available', 'assigned', 'under-repair', 'amc-due'];
   const categories = ['laptop', 'desktop', 'monitor', 'printer', 'server', 'phone', 'tablet'];
@@ -24,6 +24,14 @@ const Dashboard = () => {
     .then(res=>res.json())
     .then(data=>setAssets(data))
   },[]);
+
+  useEffect(()=>{
+    axios.get('http://localhost:5000/api/dashboard/department-allocation')
+    .then(res=>setDepartmentAllocation(res.data))
+    .catch(err=>console.log(err))
+  },[]);
+
+  
 
   // const addAsset = () => {
   //   if (newAsset.name && newAsset.department) {
@@ -65,10 +73,10 @@ const Dashboard = () => {
   const utilizationRate = totalAssets > 0 ? Math.round((assignedAssets / totalAssets) * 100) : 0;
 
   // Department allocation
-  const departmentStats = departments.map(dept => ({
-    name: dept,
-    count: assets.filter(asset => asset.department === dept).length
-  }));
+  // const departmentStats = departmentAllocation.map(dept => ({
+  //   name: dept,
+  //   count: assets.filter(asset => asset.department === dept).length
+  // }));
 
   const StatCard = ({ title, value, subtitle, icon: Icon, color, trend }) => (
     <div className={`bg-white rounded-lg p-6 shadow-sm border-l-4 ${color} transform hover:scale-105 transition-all duration-300 hover:shadow-lg`}>
@@ -201,12 +209,12 @@ const Dashboard = () => {
                 <h2 className="text-xl font-semibold text-gray-900">Asset Allocation by Department</h2>
               </div>
               
-              {departmentStats.some(dept => dept.count > 0) ? (
+              {departmentAllocation.some(dept => dept.count > 0) ? (
                 <div className="space-y-2">
-                  {departmentStats.map((dept, index) => (
+                  {departmentAllocation.map((dept, index) => (
                     <DepartmentRow 
-                      key={dept.name}
-                      department={dept.name}
+                      key={dept.department}
+                      department={dept.department}
                       count={dept.count}
                       color={['bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500'][index]}
                     />

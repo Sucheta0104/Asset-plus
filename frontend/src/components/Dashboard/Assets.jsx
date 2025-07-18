@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Eye, Edit2, Download, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const AssetManagement = () => {
   const [assets, setAssets] = useState([]);
@@ -24,6 +25,7 @@ const AssetManagement = () => {
   //   const nextId = assets.length + 1;
   //   return `AST-${nextId.toString().padStart(3, '0')}`;
   // };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
