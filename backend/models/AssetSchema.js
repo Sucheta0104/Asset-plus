@@ -2,22 +2,22 @@ const mongoose = require("mongoose");
 const assetSchema = new mongoose.Schema({
   assetTag: {
     type: String,
-    required: true,
+    required: false,
     unique: true,
     trim: true,
   },
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   category: {
     type: String,
-    required: true,
-    enum: ["IT", "Furniture", "Vehicle"],
+    required: false,
+    // enum: ["IT", "Furniture", "Vehicle"],
   },
   brand: {
     type: String,
-    required: true,
+    required: false,
   },
   model: {
     type: String,
@@ -25,18 +25,18 @@ const assetSchema = new mongoose.Schema({
   },
   serialNumber: {
     type: String,
-    required: true,
-    unique: true,
-    trim: true,
+    required: false,
+    unique: false,
+    trim: false,
   },
   purchaseDate: {
     type: Date,
-    required: true,
+    required: false,
   },
   vendor: {
     type: String,
-    required: true,
-    trim: true,
+    required: false,
+    trim: false,
     default: "",
   },
   location: {
@@ -53,17 +53,17 @@ const assetSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    required: true,
+    required: false,
     enum: ["Assigned", "Available", "UnderRepair"]
   },
   department: {
   type: String,
-  required: true,
+  required: false,
   enum: ["IT", "Sales", "Marketing", "HR"],
 },
   cost: {
     type: Number,
-    required: true,
+    required: false,
   },
 });
 

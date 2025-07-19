@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Calendar, DollarSign, MapPin, Package, Tag, User, Building, Hash, Monitor, Eye, DessertIcon, Table } from 'lucide-react';
+import axios from 'axios';
 
 export default function AddAssetForm() {
   const [formData, setFormData] = useState({
@@ -44,43 +45,7 @@ export default function AddAssetForm() {
     return formData.assetTag && formData.assetName && formData.category;
   };
 
-  // const getFilledFields = () => {
-  //   return Object.entries(formData).filter(([ value]) => value.trim() !== '');
-  // };
-
-  // const getFieldLabel = (key) => {
-  //   const labels = {
-  //     assetTag: 'Asset Tag',
-  //     assetName: 'Asset Name',
-  //     category: 'Category',
-  //     brand: 'Brand',
-  //     model: 'Model',
-  //     serialNumber: 'Serial Number',
-  //     purchaseDate: 'Purchase Date',
-  //     cost: 'Cost',
-  //     vendor: 'Vendor',
-  //     location: 'Location',
-  //     warrantyExpiry: 'Warranty Expiry'
-  //   };
-  //   return labels[key] || key;
-  // };
-
-  // const getFieldIcon = (key) => {
-  //   const icons = {
-  //     assetTag: Tag,
-  //     assetName: Package,
-  //     category: Monitor,
-  //     brand: Building,
-  //     model: Package,
-  //     serialNumber: Hash,
-  //     purchaseDate: Calendar,
-  //     cost: DollarSign,
-  //     vendor: User,
-  //     location: MapPin,
-  //     warrantyExpiry: Calendar
-  //   };
-  //   return icons[key] || Package;
-  // };
+  
 
   const InputField = ({ 
     label, 
