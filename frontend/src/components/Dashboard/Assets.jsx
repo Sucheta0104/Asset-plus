@@ -9,7 +9,7 @@ const AssetManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [editingAsset, setEditingAsset] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -180,14 +180,21 @@ const AssetManagement = () => {
               <h1 className="text-3xl font-bold text-gray-900">Assets</h1>
               <p className="text-gray-600 mt-1">Manage and track all your IT assets</p>
             </div>
-            <button
+            {/* <button
               onClick={() => setShowAddForm(true)}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
               disabled={loading}
             >
               <Plus size={16} />
               Add Asset
-            </button>
+            </button> */}
+          <Link
+          to="/dashboard/assets/addasset"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+        >
+         <Plus size={16} />
+              Add Asset
+          </Link>
           </div>
 
           {/* Error Message */}
@@ -351,10 +358,10 @@ const AssetManagement = () => {
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              {/* <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                 <Filter size={16} />
                 Advanced Search
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -409,7 +416,7 @@ const AssetManagement = () => {
                             >
                               <Edit2 size={16} />
                             </button>
-                            <button 
+                            {/* <button 
                               onClick={() => {
                                 // You can implement download functionality here
                                 console.log('Download asset:', asset.id);
@@ -418,7 +425,7 @@ const AssetManagement = () => {
                               title="Download"
                             >
                               <Download size={16} />
-                            </button>
+                            </button> */}
                             <button 
                               onClick={() => handleDelete(asset._id)}
                               className="text-red-400 hover:text-red-600"
@@ -436,7 +443,7 @@ const AssetManagement = () => {
             )}
 
             {/* Pagination */}
-            {filteredAssets.length > 0 && (
+            {/* {filteredAssets.length > 0 && (
               <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
                 <button className="flex items-center gap-2 px-3 py-1 text-sm text-gray-500 hover:text-gray-700">
                   <ChevronLeft size={16} />
@@ -448,7 +455,7 @@ const AssetManagement = () => {
                   <ChevronRight size={16} />
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

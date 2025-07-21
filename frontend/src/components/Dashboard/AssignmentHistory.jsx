@@ -95,10 +95,10 @@ const AssignmentHistory = () => {
               <Plus className="w-4 h-4" />
               <span>Add Assignment</span>
             </button>
-            {/* <button className="bg-white text-gray-700 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors flex items-center space-x-2">
+            <button className="bg-white text-gray-700 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors flex items-center space-x-2">
               <Download className="w-4 h-4" />
               <span>Export Report</span>
-            </button> */}
+            </button>
           </div>
         </div>
 
