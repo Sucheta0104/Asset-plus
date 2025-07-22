@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const AssignmentController = require('../controllers/assignmentController');
-const authMiddleware = require('../middleware/authMiddleware'); // ✅ Only auth middleware
+const authMiddleware = require('../middleware/authMiddleware');
 
 // -----------------------------
 // 📌 Functional / Custom Routes
@@ -19,6 +19,9 @@ router.get('/summary', authMiddleware, AssignmentController.getAssignmentSummary
 
 // Search assignments
 router.get('/search', authMiddleware, AssignmentController.searchAssignments);
+
+// ✅ Export assignments as CSV
+router.get('/export', authMiddleware, AssignmentController.exportAssignments); // <-- ADDED
 
 // -----------------------------
 // 📌 CRUD Routes
