@@ -2,43 +2,41 @@ const express = require('express');
 const router = express.Router();
 
 const AssignmentController = require('../controllers/assignmentController');
-
+const authMiddleware = require('../middleware/authMiddleware'); // ✅ Only auth middleware
 
 // -----------------------------
 // 📌 Functional / Custom Routes
 // -----------------------------
 
 // Get assignments filtered by status (Active, Returned, All)
-router.get('/filter/status', AssignmentController.getAssignmentsByStatus);
+router.get('/filter/status', authMiddleware, AssignmentController.getAssignmentsByStatus);
 
 // Get only returned assignments
-router.get('/returned', AssignmentController.getReturnedAssignments);
+router.get('/returned', authMiddleware, AssignmentController.getReturnedAssignments);
 
 // Get summary: total, active, returned, available
-router.get('/summary', AssignmentController.getAssignmentSummary);
+router.get('/summary', authMiddleware, AssignmentController.getAssignmentSummary);
 
 // Search assignments
-router.get('/search', AssignmentController.searchAssignments);
-
+router.get('/search', authMiddleware, AssignmentController.searchAssignments);
 
 // -----------------------------
 // 📌 CRUD Routes
 // -----------------------------
 
 // Create a new assignment
-router.post('/', AssignmentController.createAssignment);
+router.post('/', authMiddleware, AssignmentController.createAssignment);
 
 // Get all assignments
-router.get('/', AssignmentController.getAllAssignments);
+router.get('/', authMiddleware, AssignmentController.getAllAssignments);
 
 // Get assignment by ID
-router.get('/:id', AssignmentController.getAssignmentById);
+router.get('/:id', authMiddleware, AssignmentController.getAssignmentById);
 
 // Update assignment by ID
-router.put('/:id', AssignmentController.updateAssignment);
+router.put('/:id', authMiddleware, AssignmentController.updateAssignment);
 
 // Delete assignment by ID
-router.delete('/:id', AssignmentController.deleteAssignment);
-
+router.delete('/:id', authMiddleware, AssignmentController.deleteAssignment);
 
 module.exports = router;

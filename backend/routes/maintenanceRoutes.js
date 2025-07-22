@@ -10,25 +10,26 @@ const {
   getMaintenanceSummary
 } = require('../controllers/maintenanceController');
 
-//  Create a new maintenance record
-router.post('/', createMaintenance);
+const authMiddleware = require('../middleware/authMiddleware'); // ✅ Only authentication
 
-//  Get all maintenance records
-router.get('/', getAllMaintenance);
+// 📌 CRUD + Summary Routes
 
+// Create a new maintenance record
+router.post('/', authMiddleware, createMaintenance);
 
-//  Get a single maintenance record by ID
-router.get('/:id', getMaintenanceById);
+// Get all maintenance records
+router.get('/', authMiddleware, getAllMaintenance);
 
+// Get a single maintenance record by ID
+router.get('/:id', authMiddleware, getMaintenanceById);
 
-//  Update maintenance record by ID
-router.put('/:id', updateMaintenance);
+// Update maintenance record by ID
+router.put('/:id', authMiddleware, updateMaintenance);
 
+// Delete maintenance record by ID
+router.delete('/:id', authMiddleware, deleteMaintenance);
 
-//  Delete maintenance record by ID
-router.delete('/:id', deleteMaintenance);
-
-//  New route to fetch full history + summary
-router.get('/summary/all', getMaintenanceSummary);
+// Get full maintenance summary/history
+router.get('/summary/all', authMiddleware, getMaintenanceSummary);
 
 module.exports = router;

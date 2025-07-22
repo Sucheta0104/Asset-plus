@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const verifyToken = require('../middleware/authMiddleware');
 
 const {
   getDashboardSummary,
@@ -8,15 +9,9 @@ const {
   getAlerts
 } = require('../controllers/dashboardController');
 
-
-
-
-// Summary and department
-router.get('/summary', getDashboardSummary);
-router.get('/department-allocation', getDepartmentAllocation);
-
-// Last activities and alerts
-router.get('/activities', getLastActivities);
-router.get('/alerts', getAlerts);
+router.get('/summary', verifyToken, getDashboardSummary);
+router.get('/department-allocation', verifyToken, getDepartmentAllocation);
+router.get('/activities', verifyToken, getLastActivities);
+router.get('/alerts', verifyToken, getAlerts);
 
 module.exports = router;

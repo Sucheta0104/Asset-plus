@@ -11,7 +11,8 @@ const assetRoutes = require('./routes/Assetroute');
 const assignmentRoutes = require('./routes/assignmentRoute');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const maintenanceRoutes = require('./routes/maintenanceRoutes');
-const vendorRoutes = require('./routes/vendorRoutes')
+const vendorRoutes = require('./routes/vendorRoutes');
+const userAuthRoutes = require('./routes/userAuth');
 
 
 const port = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.use('/api/assignment', assignmentRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
 app.use('/api/vendors', vendorRoutes);
+app.use('/api/user', userAuthRoutes);
 
 // Default route
 app.get('/', (req, res) => {

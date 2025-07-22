@@ -10,22 +10,26 @@ const {
   getVendorSummary
 } = require('../controllers/vendorController');
 
+const authMiddleware = require('../middleware/authMiddleware'); // ✅ Authentication only
+
+// 📌 Vendor CRUD & Summary Routes
+
 // Create vendor
-router.post('/', createVendor);
+router.post('/', authMiddleware, createVendor);
 
 // Get all vendors
-router.get('/', getVendors);
+router.get('/', authMiddleware, getVendors);
 
 // Get vendor summary
-router.get('/summary/all', getVendorSummary);
+router.get('/summary/all', authMiddleware, getVendorSummary);
 
 // Get vendor by ID
-router.get('/:id', getVendorById);
+router.get('/:id', authMiddleware, getVendorById);
 
 // Update vendor
-router.put('/:id', updateVendor);
+router.put('/:id', authMiddleware, updateVendor);
 
 // Delete vendor
-router.delete('/:id', deleteVendor);
+router.delete('/:id', authMiddleware, deleteVendor);
 
 module.exports = router;
