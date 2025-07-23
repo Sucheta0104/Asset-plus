@@ -3,11 +3,12 @@ const Maintenance = require('../models/Maintenance');
 // Create maintenance record
 exports.createMaintenance = async (req, res) => {
   try {
-    const data = req.body;
+    const data = { ...req.body, userId: req.user.id }; // Add user ID from auth
     const maintenance = new Maintenance(data);
     await maintenance.save();
     res.status(201).json({ message: 'Maintenance logged successfully', maintenance });
   } catch (error) {
+    console.error('Create maintenance error:', error);
     res.status(500).json({ error: 'Failed to create maintenance record' });
   }
 };
@@ -15,9 +16,11 @@ exports.createMaintenance = async (req, res) => {
 // Get all maintenance records
 exports.getAllMaintenance = async (req, res) => {
   try {
-    const maintenanceLogs = await Maintenance.find().sort({ maintenanceDate: -1 });
+    const maintenanceLogs = await Maintenance.find()
+      .sort({ maintenanceDate: -1 });
     res.status(200).json(maintenanceLogs);
   } catch (error) {
+    console.error('Get maintenance error:', error);
     res.status(500).json({ error: 'Failed to fetch maintenance history' });
   }
 };

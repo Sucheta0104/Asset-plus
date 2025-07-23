@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
-  phoneNo: {
+  phone: { // Changed from phoneNo to match frontend
     type: String,
     required: true
   },

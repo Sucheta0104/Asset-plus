@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import { Plus, Users, CheckCircle, RotateCcw, Package, Eye, Undo2, Search } from 'lucide-react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 const AssignmentPage = () => {
   const [assignments, setAssignments] = useState([]);
+  const [summary, setSummary] = useState({
+    totalAssignments: 0,
+    activeAssignments: 0,
+    returnedAssignments: 0,
+    availableAssets: 0
+  });
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     assetTag: '',
@@ -14,6 +22,39 @@ const AssignmentPage = () => {
     assignedDate: '',
     status: 'Active'
   });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchAssignments();
+    fetchSummary();
+  }, []);
+
+  const fetchAssignments = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/api/assignment/', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setAssignments(response.data);
+    } catch (error) {
+      console.error('Error fetching assignments:', error);
+      if (error.response?.status === 401) {
+        navigate('/');
+      }
+    }
+  };
+
+  const fetchSummary = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/api/assignment/summary', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSummary(response.data);
+    } catch (error) {
+      console.error('Error fetching summary:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,39 +64,86 @@ const AssignmentPage = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    if (formData.assetTag && formData.assetName && formData.employee) {
-      const newAssignment = {
-        ...formData,
-        id: Date.now(),
-        assignedDate: formData.assignedDate || new Date().toISOString().split('T')[0]
-      };
-      setAssignments(prev => [...prev, newAssignment]);
-      setFormData({
-        assetTag: '',
-        assetName: '',
-        employee: '',
-        employeeId: '',
-        department: '',
-        assignedDate: '',
-        status: 'Active'
+  const handleSubmit = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('http://localhost:5000/api/assignment/', formData, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       setShowForm(false);
+      fetchAssignments();
+      fetchSummary();
+    } catch (error) {
+      console.error('Error creating assignment:', error);
     }
   };
 
-  const handleStatusChange = (id, newStatus) => {
-    setAssignments(prev => 
-      prev.map(assignment => 
-        assignment.id === id ? { ...assignment, status: newStatus } : assignment
-      )
-    );
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`http://localhost:5000/api/assignment/${id}`, 
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${token}` }}
+      );
+      fetchAssignments();
+      fetchSummary();
+    } catch (error) {
+      console.error('Error updating assignment status:', error);
+    }
   };
 
-  const totalAssignments = assignments.length;
-  const activeAssignments = assignments.filter(a => a.status === 'Active').length;
-  const returnedAssignments = assignments.filter(a => a.status === 'Returned').length;
-  const availableAssets = 10 - activeAssignments; // Assuming 10 total assets
+  // Update the stats section to use summary data
+  const StatsSection = () => (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-600">Total Assignments</p>
+            <p className="text-3xl font-bold text-gray-900">{summary.totalAssignments}</p>
+          </div>
+          <div className="bg-blue-100 p-3 rounded-full">
+            <Users className="h-6 w-6 text-blue-600" />
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow" style={{ animationDelay: '0.1s' }}>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-600">Active</p>
+            <p className="text-3xl font-bold text-gray-900">{summary.activeAssignments}</p>
+          </div>
+          <div className="bg-green-100 p-3 rounded-full">
+            <CheckCircle className="h-6 w-6 text-green-600" />
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow" style={{ animationDelay: '0.2s' }}>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-600">Returned</p>
+            <p className="text-3xl font-bold text-gray-900">{summary.returnedAssignments}</p>
+          </div>
+          <div className="bg-gray-100 p-3 rounded-full">
+            <RotateCcw className="h-6 w-6 text-gray-600" />
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow" style={{ animationDelay: '0.3s' }}>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-600">Available Assets</p>
+            <p className="text-3xl font-bold text-gray-900">{summary.availableAssets}</p>
+          </div>
+          <div className="bg-yellow-100 p-3 rounded-full">
+            <Package className="h-6 w-6 text-yellow-600" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="container">
@@ -185,55 +273,7 @@ const AssignmentPage = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow animate-fade-in-up">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Total Assignments</p>
-              <p className="text-3xl font-bold text-gray-900">{totalAssignments}</p>
-            </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <Users className="h-6 w-6 text-blue-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Active</p>
-              <p className="text-3xl font-bold text-gray-900">{activeAssignments}</p>
-            </div>
-            <div className="bg-green-100 p-3 rounded-full">
-              <CheckCircle className="h-6 w-6 text-green-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Returned</p>
-              <p className="text-3xl font-bold text-gray-900">{returnedAssignments}</p>
-            </div>
-            <div className="bg-gray-100 p-3 rounded-full">
-              <RotateCcw className="h-6 w-6 text-gray-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Available Assets</p>
-              <p className="text-3xl font-bold text-gray-900">{availableAssets}</p>
-            </div>
-            <div className="bg-yellow-100 p-3 rounded-full">
-              <Package className="h-6 w-6 text-yellow-600" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <StatsSection />
 
       {/* Current Assignments */}
       <div className="bg-white rounded-lg shadow-sm">

@@ -22,7 +22,10 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Specific origin for your React app
+  credentials: true
+}));
 app.use(express.urlencoded({ extended: true }));
 
 // Static files
@@ -42,7 +45,17 @@ app.get('/', (req, res) => {
   res.send("hello world");
 });
 
+// Add logging middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
+// Add error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
 
 // Start server
 app.listen(port, () => {

@@ -21,3 +21,6 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// No changes needed here for login logic.
+// Ensure protected routes use JWT middleware for Authorization header verification.

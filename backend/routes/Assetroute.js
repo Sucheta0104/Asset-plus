@@ -6,19 +6,22 @@ const AssetController = require('../controllers/AssetController');
 // Only using auth middleware
 const authMiddleware = require('../middleware/authMiddleware');
 
+// Protect all routes
+router.use(authMiddleware);
+
 // Create asset (only auth)
-router.post('/', authMiddleware, AssetController.createAsset);
+router.post('/', AssetController.createAsset);
 
 // Get all assets
-router.get('/', authMiddleware, AssetController.getallAsset);
+router.get('/', AssetController.getallAsset);
 
 // Get asset by ID
-router.get('/:id', authMiddleware, AssetController.getassetbyID);
+router.get('/:id', AssetController.getassetbyID);
 
 // Update asset
-router.put('/:id', authMiddleware, AssetController.updateasset);
+router.put('/:id', AssetController.updateasset);
 
 // Delete asset
-router.delete('/:id', authMiddleware, AssetController.DeleteAsset);
+router.delete('/:id', AssetController.DeleteAsset);
 
 module.exports = router;
