@@ -13,6 +13,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const maintenanceRoutes = require('./routes/maintenanceRoutes');
 const vendorRoutes = require('./routes/vendorRoutes');
 const userAuthRoutes = require('./routes/userAuth');
+const reportRoutes = require('./routes/reportRoutes'); 
 
 
 const port = process.env.PORT || 3000;
@@ -39,6 +40,8 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/user', userAuthRoutes);
+app.use('/api/reports', reportRoutes);
+
 
 // Default route
 app.get('/', (req, res) => {

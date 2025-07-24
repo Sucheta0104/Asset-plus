@@ -37,7 +37,7 @@ const assignmentSchema = new mongoose.Schema({
   },
   assignedBy: {
     type: String,
-    required: true,
+    required: false,
     trim: true
   },
     status: {

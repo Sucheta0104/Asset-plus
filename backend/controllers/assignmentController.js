@@ -5,6 +5,12 @@ const { Parser } = require("json2csv");
 // Create a new assignment
 exports.createAssignment = async (req, res) => {
   try {
+    const asset = await Asset.findOne({ assetTag: req.body.assetTag });
+    if (!asset) {
+      return res.status(404).json({ message: "Asset not found" });
+    }
+    req.body.assetId = asset._id;
+    console.log("Asset ID:", asset._id);
     const assignment = new Assignment(req.body);
     await assignment.save();
     await Asset.findByIdAndUpdate(assignment.assetId, { status: "Assigned" });

@@ -34,14 +34,7 @@ router.get('/export', AssignmentController.exportAssignments); // <-- ADDED
 router.post('/', AssignmentController.createAssignment);
 
 // Get all assignments
-router.get('/', async (req, res) => {
-  try {
-    const assignments = await Assignment.find().populate('assetId');
-    res.status(200).json(assignments);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching assignments", error: error.message });
-  }
-});
+router.get('/', AssignmentController.getAllAssignments);
 
 // Get assignment by ID
 router.get('/:id', AssignmentController.getAssignmentById);
