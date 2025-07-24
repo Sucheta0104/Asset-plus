@@ -31,7 +31,7 @@ const AssetManagement = () => {
 
   const fetchAssets = async () => {
     try {
-      setLoading(true);
+      setLoading(false);
       setError('');
       const response = await axios.get('http://localhost:5000/api/asset');
       setAssets(response.data);
@@ -180,14 +180,7 @@ const AssetManagement = () => {
               <h1 className="text-3xl font-bold text-gray-900">Assets</h1>
               <p className="text-gray-600 mt-1">Manage and track all your IT assets</p>
             </div>
-            {/* <button
-              onClick={() => setShowAddForm(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-              disabled={loading}
-            >
-              <Plus size={16} />
-              Add Asset
-            </button> */}
+            
           <Link
           to="/dashboard/assets/addasset"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"

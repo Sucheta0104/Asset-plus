@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Plus, Users, Wrench, Clock, FileText, Settings, Package, UserPlus, TrendingUp } from 'lucide-react';
-import { useEffect } from 'react';
 import axios from 'axios';
+
+// Add axios interceptor setup
+axios.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
 const Dashboard = () => {
   const [assets, setAssets] = useState([]);
@@ -18,18 +31,54 @@ const Dashboard = () => {
   const departments = ['IT Department', 'Sales', 'Marketing', 'HR'];
   const statuses = ['available', 'assigned', 'under-repair', 'amc-due'];
   const categories = ['laptop', 'desktop', 'monitor', 'printer', 'server', 'phone', 'tablet'];
+  const navigate = useNavigate();
   
-  useEffect(()=>{
-    fetch('http://localhost:5000/api/asset/')
-    .then(res=>res.json())
-    .then(data=>setAssets(data))
-  },[]);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/');
+      return;
+    }
+  }, [navigate]);
 
-  useEffect(()=>{
-    axios.get('http://localhost:5000/api/dashboard/department-allocation')
-    .then(res=>setDepartmentAllocation(res.data))
-    .catch(err=>console.log(err))
-  },[]);
+  // Modify the existing useEffect for fetching assets
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/');
+          return;
+        }
+
+        const response = await axios.get('http://localhost:5000/api/asset/', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setAssets(response.data);
+      } catch (error) {
+        console.error('Error fetching assets:', error);
+        if (error.response?.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/');
+        }
+      }
+    };
+
+    fetchData();
+  }, [navigate]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:5000/api/dashboard/department-allocation', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => setDepartmentAllocation(res.data))
+      .catch(err => console.log(err));
+  }, []);
 
   
 
@@ -66,10 +115,10 @@ const Dashboard = () => {
 
   // Calculate statistics
   const totalAssets = assets.length;
-  const assignedAssets = assets.filter(asset => asset.status === 'Assigned').length;
-  const underRepair = assets.filter(asset => asset.status === 'UnderRepair').length;
+  const assignedAssets = assets.filter(asset => asset.status === 'assigned').length;
+  const underRepair = assets.filter(asset => asset.status === 'under-repair').length;
   const amcDue = assets.filter(asset => asset.status === 'amc-due').length;
-  const criticalRepairs = assets.filter(asset => asset.status === 'UnderRepair' && asset.priority === 'critical').length;
+  const criticalRepairs = assets.filter(asset => asset.status === 'under-repair' && asset.priority === 'critical').length;
   const utilizationRate = totalAssets > 0 ? Math.round((assignedAssets / totalAssets) * 100) : 0;
 
   // Department allocation

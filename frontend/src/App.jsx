@@ -14,6 +14,7 @@ import Reports from "./components/Dashboard/Reports";
 import { ToastContainer } from 'react-toastify';
 import AssignmentHistory from "./components/Dashboard/AssignmentHistory";
 import Addasset from "./components/Dashboard/Addasset";
+import RegistrationPage  from "./pages/Register";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/Pricing" element={<Pricing />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/signup" element={<SignUpForm />} />
+        <Route path="/register" element={<RegistrationPage/>}/>
 
         {/* Dashboard Layout with nested routes */}
         <Route path="/dashboard" element={<DashboardLayout />}>

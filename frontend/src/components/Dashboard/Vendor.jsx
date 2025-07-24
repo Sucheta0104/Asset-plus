@@ -37,7 +37,12 @@ const VendorManagementForm = () => {
   const fetchVendors = async () => {
     try {
       setLoading(true);
-      const response = await fetch(API_BASE_URL);
+      const token = localStorage.getItem('token');
+      const response = await fetch(API_BASE_URL, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch vendors');
       const data = await response.json();
       setVendors(data);
@@ -52,7 +57,12 @@ const VendorManagementForm = () => {
 
   const fetchSummary = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/summary/all`);
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/summary/all`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch summary');
       const data = await response.json();
       setSummary(data);

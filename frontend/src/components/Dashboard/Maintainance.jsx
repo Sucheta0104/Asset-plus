@@ -31,7 +31,12 @@ const Maintenance = () => {
   const fetchMaintenanceHistory = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(API_BASE);
+      const token = localStorage.getItem('token');
+      const response = await fetch(API_BASE, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch maintenance history");
       }
@@ -47,7 +52,12 @@ const Maintenance = () => {
 
   const fetchMaintenanceSummary = async () => {
     try {
-      const response = await fetch(`${API_BASE}/summary/all`);
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE}/summary/all`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch maintenance summary");
       }
@@ -119,6 +129,7 @@ const Maintenance = () => {
     setError(null);
 
     try {
+      const token = localStorage.getItem('token');
       // Create maintenance record payload
       const maintenanceData = {
         assetTag: selectedAsset.split(" - ")[0],
@@ -144,6 +155,7 @@ const Maintenance = () => {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(maintenanceData),
           }
@@ -154,6 +166,7 @@ const Maintenance = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(maintenanceData),
         });
@@ -199,8 +212,12 @@ const Maintenance = () => {
     }
 
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE}/${id}`, {
         method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       });
 
       if (!response.ok) {

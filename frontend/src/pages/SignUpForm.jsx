@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify'; // Uncomment if you want to use toast notifications
+import { toast } from 'react-toastify';
 
 const SignUpForm = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-   email: '',
+    email: '',
     password: '',
   });
-
   const [loading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -20,23 +18,45 @@ const SignUpForm = () => {
     });
     setError(false);
   };
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const {email, password } = formData;
+    const { email, password } = formData;
+    
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email , password });
-      if(response.status === 200) {
-        toast.success('Login successful!'); // Show success message
-        navigate('/dashboard'); // Redirect to dashboard after successful signup
+      console.log('Attempting login...');
+      const response = await axios.post(
+        'http://localhost:5000/api/user/login',
+        { email, password },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true,
+          timeout: 5000 // 5 second timeout
+        }
+      );
 
+      console.log('Login response:', response);
+
+      if (response.data && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        toast.success('Login successful!');
+        navigate('/dashboard');
       }
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error('Login error details:', error);
+      setError(true);
+      
+      if (!error.response) {
+        toast.error('Cannot connect to server. Please check if server is running.');
+      } else if (error.response.status === 401) {
+        toast.error('Invalid credentials');
+      } else {
+        toast.error('Login failed. Please try again.');
+      }
     }
-
-    
   };
 
   return (
@@ -48,8 +68,7 @@ const SignUpForm = () => {
           <p className="text-gray-500 text-sm">Create your account</p>
         </div>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-          </div>
+          <div></div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
@@ -89,9 +108,18 @@ const SignUpForm = () => {
             )}
           </button>
         </form>
+        <div className="text-center">
+          <p className="text-gray-600">
+            Already have an account?{' '}
+            <a href="/register" className="text-purple-600 hover:text-purple-700 font-semibold transition-colors duration-200">
+              Register
+            </a>
+          </p>
         </div>
+      </div>
     </div>
   );
 };
 
 export default SignUpForm;
+
