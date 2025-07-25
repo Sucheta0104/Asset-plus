@@ -43,10 +43,10 @@ export default function FeaturesSection() {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="bg-blue-600/90 text-white rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.2)] p-6 sm:p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-[0_15px_35px_rgba(59,130,246,0.5)]"
+            className="bg-beige-100 text-black rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.2)] p-6 sm:p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-[0_15px_35px_rgba(59,130,246,0.5)]"
           >
-            <div className="flex items-center justify-center h-10 w-15 rounded-full bg-white/10 mb-4">
-              <feature.icon className="h-8 w-8 text-white" />
+            <div className="flex items-center justify-center h-10 w-15 rounded-full bg-black/10 mb-4">
+              <feature.icon className="h-8 w-8 text-blue-900" />
             </div>
             <h3 className="text-lg sm:text-xl font-semibold mb-2">{feature.title}</h3>
             <p className="text-sm sm:text-base">{feature.description}</p>

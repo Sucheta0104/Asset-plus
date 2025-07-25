@@ -26,12 +26,28 @@ exports.createAssignment = async (req, res) => {
 // Get all assignments
 exports.getAllAssignments = async (req, res) => {
   try {
-    const assignments = await Assignment.find().populate("assetId");
-    res.status(200).json(assignments);
+    const assignments = await Assignment.find()
+      .populate('assetId', 'assetTag name') // Only populate necessary fields
+      .sort('-createdAt');
+    
+    // Transform data to ensure all required fields exist
+    const safeAssignments = assignments.map(assignment => ({
+      _id: assignment._id,
+      assetId: assignment.assetId || { assetTag: '-', name: '-' },
+      employeeName: assignment.employeeName || '-',
+      employeeId: assignment.employeeId || '-',
+      department: assignment.department || '-',
+      assignmentDate: assignment.assignmentDate,
+      status: assignment.status || 'Unknown'
+    }));
+
+    res.status(200).json(safeAssignments);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error fetching assignments", error: error.message });
+    console.error('Error fetching assignments:', error);
+    res.status(500).json({
+      message: "Error fetching assignments",
+      error: error.message
+    });
   }
 };
 

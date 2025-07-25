@@ -235,6 +235,10 @@ const AssignmentPage = () => {
     </div>
   );
 
+  const renderTableCell = (data, defaultValue = '-') => {
+    return data || defaultValue;
+  };
+
   return (
     <div className="container">
      <div className="p-6 bg-gray-50 min-h-screen">
@@ -423,24 +427,24 @@ const AssignmentPage = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {assignments.map((assignment, index) => (
-                  <tr key={assignment.id} className="hover:bg-gray-50 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <tr key={assignment._id || index} className="hover:bg-gray-50 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {assignment.assetId.assetTag|| ''}
+                      {renderTableCell(assignment.assetId?.assetTag)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {assignment.assetId.name || ''}
+                      {renderTableCell(assignment.assetId?.name)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {assignment.employeeName}
+                      {renderTableCell(assignment.employeeName)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {assignment.employeeId}
+                      {renderTableCell(assignment.employeeId)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {assignment.department}
+                      {renderTableCell(assignment.department)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {assignment.assignmentDate}
+                      {assignment.assignmentDate ? new Date(assignment.assignmentDate).toLocaleDateString() : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
@@ -448,7 +452,7 @@ const AssignmentPage = () => {
                           ? 'bg-green-100 text-green-800' 
                           : 'bg-gray-100 text-gray-800'
                       }`}>
-                        {assignment.status}
+                        {renderTableCell(assignment.status)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

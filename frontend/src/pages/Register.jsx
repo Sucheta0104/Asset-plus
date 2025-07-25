@@ -103,7 +103,7 @@ export default function RegistrationPage() {
         setIsSubmitting(false);
         setIsSuccess(true);
         setTimeout(() => {
-          navigate('/login');
+          navigate('/signup');
         }, 2000);
       }
     } catch (error) {
@@ -153,7 +153,7 @@ export default function RegistrationPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-500 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-white p-4">
       <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full animate-in slide-in-from-bottom-5 fade-in duration-700">
         {/* Header */}
         <div className="text-center mb-8">

@@ -43,11 +43,11 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto mt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
         <p>© 2024 AssetPlus. All rights reserved.</p>
-        <div className="flex space-x-6 mt-4 md:mt-0">
+        {/* <div className="flex space-x-6 mt-4 md:mt-0">
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
           <a href="#">Support</a>
-        </div>
+        </div> */}
       </div>
     </footer>
   );
