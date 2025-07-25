@@ -2,121 +2,65 @@
 const Asset = require('../models/AssetSchema');
 const Maintenance = require('../models/Maintenance');
 
-// Summary Cards
+// Summary Cards - FIXED WITH CORRECT FIELD NAMES
 exports.getReportSummary = async (req, res) => {
   try {
-    // Debug: Let's see what data we have
-    console.log('=== DEBUG: Checking data ===');
-    
-    // Check total assets
+    // Get total number of assets
     const totalAssets = await Asset.countDocuments();
-    console.log('Total Assets Count:', totalAssets);
     
-    // Check a sample asset to see field names
-    const sampleAsset = await Asset.findOne();
-    console.log('Sample Asset:', sampleAsset);
-    
-    // Check total value with multiple possible field names
-    const totalValueQuery = await Asset.aggregate([
+    // Get total ASSET purchase value
+    const assetValueQuery = await Asset.aggregate([
       {
         $group: {
           _id: null,
-          totalPurchaseCost: { $sum: "$purchaseCost" },
-          totalValue: { $sum: "$value" },
-          totalPrice: { $sum: "$price" },
-          totalCost: { $sum: "$cost" },
+          totalAssetValue: { $sum: "$cost" },
           count: { $sum: 1 }
         }
       }
     ]);
-    console.log('Asset Value Analysis:', totalValueQuery);
     
-    // Check maintenance data
-    const maintenanceCount = await Maintenance.countDocuments();
-    console.log('Maintenance Records Count:', maintenanceCount);
-    
-    const sampleMaintenance = await Maintenance.findOne();
-    console.log('Sample Maintenance:', sampleMaintenance);
-    
-    // Calculate maintenance cost with fallback
+    // Get total MAINTENANCE cost using serviceCost field
     const maintenanceCostQuery = await Maintenance.aggregate([
       {
+        $match: {
+          serviceCost: { $exists: true, $ne: null }
+        }
+      },
+      {
         $group: {
           _id: null,
-          totalCost: { $sum: "$cost" },
-          totalAmount: { $sum: "$amount" },
-          totalPrice: { $sum: "$price" },
-          count: { $sum: 1 }
+          totalMaintenanceCost: { $sum: "$serviceCost" }
         }
       }
     ]);
-    console.log('Maintenance Cost Analysis:', maintenanceCostQuery);
     
-    // Get distinct vendors and departments
-    const totalVendors = await Asset.distinct("vendor");
-    const totalDepartments = await Asset.distinct("assignedDepartment");
+    // Get distinct vendors and departments with correct field names
+    const totalVendors = await Asset.distinct("vendor", {
+      vendor: { $exists: true, $ne: null, $ne: "" }
+    });
     
-    console.log('Unique Vendors:', totalVendors);
-    console.log('Unique Departments:', totalDepartments);
+    const totalDepartments = await Asset.distinct("department", {
+      department: { $exists: true, $ne: null, $ne: "" }
+    });
     
-    // Calculate final values with fallbacks
-    const totalValue = totalValueQuery[0]?.totalPurchaseCost || 
-                      totalValueQuery[0]?.totalValue || 
-                      totalValueQuery[0]?.totalPrice || 
-                      totalValueQuery[0]?.totalCost || 0;
+    // Calculate ASSET VALUE
+    const totalAssetValue = assetValueQuery[0]?.totalAssetValue || 0;
     
-    const maintenanceCost = maintenanceCostQuery[0]?.totalCost || 
-                           maintenanceCostQuery[0]?.totalAmount || 
-                           maintenanceCostQuery[0]?.totalPrice || 0;
+    // Get maintenance cost
+    const totalMaintenanceCost = maintenanceCostQuery[0]?.totalMaintenanceCost || 0;
     
     const result = {
       totalAssets,
-      totalValue,
-      maintenanceCost,
-      activeVendors: totalVendors.filter(v => v && v !== null && v !== '').length,
-      activeDepartments: totalDepartments.filter(d => d && d !== null && d !== '').length
+      totalAssetValue,
+      totalMaintenanceCost,
+      activeVendors: totalVendors.length,
+      activeDepartments: totalDepartments.length,
+      grandTotal: totalAssetValue + totalMaintenanceCost
     };
-    
-    console.log('Final Result:', result);
-    console.log('=== END DEBUG ===');
     
     res.json(result);
   } catch (err) {
     console.error('Error in getReportSummary:', err);
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// Debug endpoint to check your data structure
-exports.getDebugInfo = async (req, res) => {
-  try {
-    const assetSample = await Asset.findOne();
-    const maintenanceSample = await Maintenance.findOne();
-    
-    const assetFields = assetSample ? Object.keys(assetSample.toObject()) : [];
-    const maintenanceFields = maintenanceSample ? Object.keys(maintenanceSample.toObject()) : [];
-    
-    // Check for assets with purchaseCost > 0
-    const assetsWithCost = await Asset.countDocuments({ 
-      purchaseCost: { $gt: 0 } 
-    });
-    
-    // Check for maintenance with cost > 0
-    const maintenanceWithCost = await Maintenance.countDocuments({ 
-      cost: { $gt: 0 } 
-    });
-    
-    res.json({
-      assetSample,
-      maintenanceSample,
-      assetFields,
-      maintenanceFields,
-      assetsWithCost,
-      maintenanceWithCost,
-      totalAssets: await Asset.countDocuments(),
-      totalMaintenance: await Maintenance.countDocuments()
-    });
-  } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
@@ -127,7 +71,7 @@ exports.getDepartmentDistribution = async (req, res) => {
     const data = await Asset.aggregate([
       { 
         $match: { 
-          assignedDepartment: { 
+          department: { 
             $exists: true, 
             $ne: null, 
             $ne: "" 
@@ -136,13 +80,20 @@ exports.getDepartmentDistribution = async (req, res) => {
       },
       { 
         $group: { 
-          _id: "$assignedDepartment", 
+          _id: "$department", 
           count: { $sum: 1 } 
         } 
       },
       { $sort: { count: -1 } }
     ]);
-    res.json(data);
+    
+    const total = data.reduce((sum, item) => sum + item.count, 0);
+    const withPercentages = data.map(item => ({
+      ...item,
+      percentage: total > 0 ? ((item.count / total) * 100).toFixed(1) : 0
+    }));
+    
+    res.json(withPercentages);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -160,7 +111,7 @@ exports.getAssetCostAnalysis = async (req, res) => {
       {
         $group: {
           _id: "$category",
-          totalCost: { $sum: "$purchaseCost" },
+          totalCost: { $sum: "$cost" },
           quantity: { $sum: 1 }
         }
       },
@@ -178,19 +129,19 @@ exports.getMaintenanceTrends = async (req, res) => {
     const data = await Maintenance.aggregate([
       {
         $match: {
-          date: { $exists: true, $ne: null },
-          cost: { $exists: true, $ne: null }
+          maintenanceDate: { $exists: true, $ne: null },
+          serviceCost: { $exists: true, $ne: null, $gt: 0 }
         }
       },
       {
         $group: {
           _id: { 
             $dateToString: { 
-              format: "%Y-%m", 
-              date: "$date" 
+              format: "%b", 
+              date: "$maintenanceDate" 
             }
           },
-          totalCost: { $sum: "$cost" },
+          totalCost: { $sum: "$serviceCost" },
           incidents: { $sum: 1 }
         }
       },
@@ -209,14 +160,14 @@ exports.getVendorPortfolio = async (req, res) => {
       {
         $match: {
           vendor: { $exists: true, $ne: null, $ne: "" },
-          purchaseCost: { $exists: true, $ne: null }
+          cost: { $exists: true, $ne: null }
         }
       },
       {
         $group: {
           _id: "$vendor",
           totalAssets: { $sum: 1 },
-          value: { $sum: "$purchaseCost" }
+          value: { $sum: "$cost" }
         }
       },
       { $sort: { value: -1 } }
@@ -229,6 +180,22 @@ exports.getVendorPortfolio = async (req, res) => {
     }));
     
     res.json(withPct);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Simple debug endpoint
+exports.getDebugInfo = async (req, res) => {
+  try {
+    const assetCount = await Asset.countDocuments();
+    const maintenanceCount = await Maintenance.countDocuments();
+    
+    res.json({
+      totalAssets: assetCount,
+      totalMaintenance: maintenanceCount,
+      message: "Debug info without detailed data"
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
