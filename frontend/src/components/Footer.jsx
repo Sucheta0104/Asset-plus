@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-[#0D1117] text-white px-6 py-12">
+    <footer className="bg-black text-white px-6 py-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 border-b border-gray-700 pb-10">
         <div>
           <div className="flex items-center space-x-2 mb-4">
@@ -41,13 +41,8 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+      <div className="max-w-7xl mx-auto mt-6 flex flex-col md:flex-row justify-center items-center text-sm text-gray-400">
         <p>© 2024 AssetPlus. All rights reserved.</p>
-        {/* <div className="flex space-x-6 mt-4 md:mt-0">
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
-          <a href="#">Support</a>
-        </div> */}
       </div>
     </footer>
   );

@@ -137,19 +137,17 @@ export default function Pricing() {
             </div>
           </div>
         </div>
-
         <FAQSection /> 
+    </section>
+      
         <section className= "py-20 px-6 bg-blue-700 text-center w-full">
         <div className="justify-center max-w-5xl mx-auto">
           <h2 className="text-4xl font-extrabold text-white mb-4">
             Ready to get started?
           </h2>
           <p className="text-2xl  text-white mb-4">Join thousands of IT teams who trust AssetPlus to manage their assets.</p>
-          
-
         </div>
 
-      </section>
       </section>
     </Layout>
   );
