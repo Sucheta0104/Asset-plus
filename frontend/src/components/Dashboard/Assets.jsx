@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Edit2, Download, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Search, Filter, Edit2,Trash2} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 

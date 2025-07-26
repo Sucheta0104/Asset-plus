@@ -212,11 +212,12 @@ const Reports = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Asset Management Dashboard</h1>
+    <div className="container">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Asset Management Dashboard</h1>
           <p className="text-sm sm:text-base text-gray-600">Comprehensive overview of your organization's assets and reports</p>
         </div>
 
@@ -524,6 +525,7 @@ const Reports = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
