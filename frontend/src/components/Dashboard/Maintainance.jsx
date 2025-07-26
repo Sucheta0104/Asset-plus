@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Maintenance = () => {
   const [selectedAsset, setSelectedAsset] = useState("");
@@ -122,6 +124,7 @@ const Maintenance = () => {
       !assetStatus
     ) {
       setError("Please fill in all required fields");
+      toast.error("Please fill in all required fields");
       return;
     }
 
@@ -187,12 +190,13 @@ const Maintenance = () => {
       // Reset form
       resetForm();
 
-      alert(`Maintenance ${isEditing ? "updated" : "logged"} successfully!`);
+      toast.success(`Maintenance ${isEditing ? "updated" : "logged"} successfully!`);
     } catch (err) {
       setError(
         `Error ${isEditing ? "updating" : "logging"} maintenance: ` +
           err.message
       );
+      toast.error(`Failed to ${isEditing ? "update" : "log"} maintenance: ${err.message}`);
       console.error(
         `Error ${isEditing ? "updating" : "logging"} maintenance:`,
         err
@@ -227,23 +231,24 @@ const Maintenance = () => {
       // Refresh the maintenance history and summary
       await fetchMaintenanceHistory();
       await fetchMaintenanceSummary();
-      alert("Maintenance record deleted successfully!");
+      toast.success("Maintenance record deleted successfully!");
     } catch (err) {
       setError("Error deleting maintenance record: " + err.message);
+      toast.error(`Failed to delete maintenance record: ${err.message}`);
       console.error("Error deleting maintenance record:", err);
     }
   };
 
   const MaintenanceHistoryComponent = () => (
-    <div className="bg-white p-6 rounded-lg shadow-sm mt-6 animate-slideIn">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
+    <div className="bg-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg border border-gray-200 mb-8 animate-slideIn hover:shadow-xl transition-shadow duration-300">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex items-center space-x-2">
           <span>📋</span>
           <span>Maintenance History</span>
         </h2>
         <button
           onClick={() => setShowHistory(false)}
-          className="text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200 hover:scale-105"
+          className="text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200 hover:scale-105 px-4 py-2 rounded-lg hover:bg-gray-100"
         >
           ✕ Close
         </button>
@@ -265,15 +270,15 @@ const Maintenance = () => {
       ) : (
         <>
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center transform hover:scale-105 transition-transform duration-200">
-              <h3 className="text-xl font-bold text-blue-900 animate-countUp">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+            <div className="bg-blue-50 border border-blue-200 p-6 rounded-xl text-center transform hover:scale-105 transition-transform duration-200 shadow-sm">
+              <h3 className="text-2xl sm:text-3xl font-bold text-blue-900 animate-countUp">
                 {summary?.totalRecords || maintenanceHistory.length}
               </h3>
-              <p className="text-sm text-blue-700">Total Maintenance Logs</p>
+              <p className="text-sm sm:text-base text-blue-700 font-medium">Total Maintenance Logs</p>
             </div>
-            <div className="bg-green-50 border border-green-200 p-4 rounded-lg text-center transform hover:scale-105 transition-transform duration-200">
-              <h3 className="text-xl font-bold text-green-900 animate-countUp">
+            <div className="bg-green-50 border border-green-200 p-6 rounded-xl text-center transform hover:scale-105 transition-transform duration-200 shadow-sm">
+              <h3 className="text-2xl sm:text-3xl font-bold text-green-900 animate-countUp">
                 ₹
                 {summary?.totalCost ||
                   maintenanceHistory.reduce(
@@ -281,31 +286,31 @@ const Maintenance = () => {
                     0
                   )}
               </h3>
-              <p className="text-sm text-green-700">Total Cost</p>
+              <p className="text-sm sm:text-base text-green-700 font-medium">Total Cost</p>
             </div>
-            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-center transform hover:scale-105 transition-transform duration-200">
-              <h3 className="text-xl font-bold text-yellow-900 animate-countUp">
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-xl text-center transform hover:scale-105 transition-transform duration-200 shadow-sm">
+              <h3 className="text-2xl sm:text-3xl font-bold text-yellow-900 animate-countUp">
                 {summary?.followUpNeeded ||
                   maintenanceHistory.filter(
                     (log) => log.assetStatus === "Needs Follow-up"
                   ).length}
               </h3>
-              <p className="text-sm text-yellow-700">Follow-up Needed</p>
+              <p className="text-sm sm:text-base text-yellow-700 font-medium">Follow-up Needed</p>
             </div>
           </div>
 
           {/* Maintenance Records Table */}
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-xl border border-gray-200">
             <table className="w-full text-sm text-left text-gray-700">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Asset</th>
-                  <th className="px-4 py-3 font-medium">Date & Time</th>
-                  <th className="px-4 py-3 font-medium">Technician</th>
-                  <th className="px-4 py-3 font-medium">Type</th>
-                  <th className="px-4 py-3 font-medium">Cost</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium">Actions</th>
+                  <th className="px-6 py-4 font-semibold text-gray-900">Asset</th>
+                  <th className="px-6 py-4 font-semibold text-gray-900">Date & Time</th>
+                  <th className="px-6 py-4 font-semibold text-gray-900">Technician</th>
+                  <th className="px-6 py-4 font-semibold text-gray-900">Type</th>
+                  <th className="px-6 py-4 font-semibold text-gray-900">Cost</th>
+                  <th className="px-6 py-4 font-semibold text-gray-900">Status</th>
+                  <th className="px-6 py-4 font-semibold text-gray-900">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -315,26 +320,26 @@ const Maintenance = () => {
                     className="border-b hover:bg-gray-50 transition-colors duration-200 animate-fadeIn"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <td className="px-4 py-3">
-                      <div className="font-medium">{log.assetTag}</div>
-                      <div className="text-xs text-gray-500">
+                    <td className="px-6 py-4">
+                      <div className="font-semibold text-gray-900">{log.assetTag}</div>
+                      <div className="text-sm text-gray-500">
                         {log.assetName}
                       </div>
                     </td>
-                    <td className="px-4 py-3">
-                      <div>
+                    <td className="px-6 py-4">
+                      <div className="font-medium">
                         {new Date(log.maintenanceDate).toLocaleDateString()}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-sm text-gray-500">
                         {log.maintenanceTime}
                       </div>
                     </td>
-                    <td className="px-4 py-3">{log.technicianName}</td>
-                    <td className="px-4 py-3">{log.maintenanceType}</td>
-                    <td className="px-4 py-3">₹{log.serviceCost}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4 font-medium">{log.technicianName}</td>
+                    <td className="px-6 py-4">{log.maintenanceType}</td>
+                    <td className="px-6 py-4 font-semibold">₹{log.serviceCost}</td>
+                    <td className="px-6 py-4">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs transition-all duration-200 ${
+                        className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
                           log.assetStatus === "Fully Operational"
                             ? "bg-green-100 text-green-800"
                             : log.assetStatus === "Needs Follow-up"
@@ -347,11 +352,11 @@ const Maintenance = () => {
                         {log.assetStatus}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
-                      <div className="flex space-x-2">
+                    <td className="px-6 py-4">
+                      <div className="flex space-x-3">
                         <button
                           onClick={() => handleEdit(log)}
-                          className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
+                          className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 p-2 rounded-lg hover:bg-blue-50"
                           title="Edit Record"
                         >
                           ✏️
@@ -360,7 +365,7 @@ const Maintenance = () => {
                           onClick={() =>
                             deleteMaintenanceRecord(log.id || log._id)
                           }
-                          className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200"
+                          className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200 p-2 rounded-lg hover:bg-red-50"
                           title="Delete Record"
                         >
                           🗑️
@@ -378,19 +383,19 @@ const Maintenance = () => {
   );
 
   return (
-    <div className="container">
-      <div className="max-w-4xl mx-auto py-6">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
-        <div className="bg-white p-6 rounded-lg shadow-sm mb-6 animate-slideDown">
+        <div className="bg-white p-6 lg:p-8 rounded-xl shadow-lg border border-gray-200 mb-8 animate-slideDown hover:shadow-xl transition-shadow duration-300">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-semibold text-gray-800 mb-2 flex items-center space-x-2">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 flex items-center space-x-2">
                 <span className="animate-bounce">🔧</span>
                 <span>
                   {isEditing ? "Edit Maintenance Record" : "Maintenance"}
                 </span>
               </h1>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
                 {isEditing
                   ? "Update maintenance record details"
                   : "Record repair activity and maintenance logs"}
@@ -398,7 +403,7 @@ const Maintenance = () => {
             </div>
             <button
               onClick={() => setShowHistory(!showHistory)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-all duration-200 flex items-center space-x-2 hover:scale-105 transform"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 hover:scale-105 transform shadow-lg hover:shadow-xl"
             >
               <span>📋</span>
               <span>{showHistory ? "Hide History" : "View History"}</span>
@@ -408,7 +413,7 @@ const Maintenance = () => {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center space-x-2">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl mb-8 flex items-center space-x-2 shadow-lg">
             <span>⚠️</span>
             <span>{error}</span>
             <button
@@ -422,7 +427,7 @@ const Maintenance = () => {
 
         {/* Edit Mode Alert */}
         {isEditing && (
-          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-6 py-4 rounded-xl mb-8 flex items-center justify-between shadow-lg">
             <div className="flex items-center space-x-2">
               <span>ℹ️</span>
               <span>You are editing a maintenance record</span>
@@ -440,13 +445,13 @@ const Maintenance = () => {
         {showHistory && <MaintenanceHistoryComponent />}
 
         {/* Main Card */}
-        <div className="bg-white p-8 rounded-lg shadow-sm animate-slideUp">
+        <div className="bg-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg border border-gray-200 animate-slideUp hover:shadow-xl transition-shadow duration-300">
           {/* Recording Info */}
-          <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg mb-6 transform hover:scale-[1.02] transition-transform duration-200">
-            <h3 className="text-lg font-medium text-gray-800 mb-3">
+          <div className="bg-gray-50 border border-gray-200 p-6 rounded-xl mb-8 transform hover:scale-[1.02] transition-transform duration-200 shadow-sm">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
               What to record in maintenance:
             </h3>
-            <div className="text-sm text-gray-700 space-y-1">
+            <div className="text-sm sm:text-base text-gray-700 space-y-2">
               <div className="flex items-center space-x-2">
                 <span className="text-orange-500">•</span>
                 <span>Asset details and identification</span>
@@ -476,16 +481,16 @@ const Maintenance = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit}>
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* Asset Selection */}
               <div className="animate-fadeIn">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                   Select Asset *
                 </label>
                 <select
                   value={selectedAsset}
                   onChange={(e) => setSelectedAsset(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-base"
                   required
                 >
                   <option value="">Choose an asset...</option>
@@ -501,30 +506,30 @@ const Maintenance = () => {
 
               {/* Date and Time */}
               <div
-                className="grid grid-cols-2 gap-4 animate-fadeIn"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-fadeIn"
                 style={{ animationDelay: "100ms" }}
               >
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                     Maintenance Date *
                   </label>
                   <input
                     type="date"
                     value={maintenanceDate}
                     onChange={(e) => setMaintenanceDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-base"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                     Time *
                   </label>
                   <input
                     type="time"
                     value={maintenanceTime}
                     onChange={(e) => setMaintenanceTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-base"
                     required
                   />
                 </div>
@@ -535,13 +540,13 @@ const Maintenance = () => {
                 className="animate-fadeIn"
                 style={{ animationDelay: "200ms" }}
               >
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                   Maintenance Type *
                 </label>
                 <select
                   value={maintenanceType}
                   onChange={(e) => setMaintenanceType(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-base"
                   required
                 >
                   <option value="">Select maintenance type...</option>
@@ -556,11 +561,11 @@ const Maintenance = () => {
 
               {/* Technician and Cost */}
               <div
-                className="grid grid-cols-2 gap-4 animate-fadeIn"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-fadeIn"
                 style={{ animationDelay: "300ms" }}
               >
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                     Technician Name *
                   </label>
                   <input
@@ -568,12 +573,12 @@ const Maintenance = () => {
                     value={technicianName}
                     onChange={(e) => setTechnicianName(e.target.value)}
                     placeholder="Enter technician name"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-base"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                     Service Cost *
                   </label>
                   <input
@@ -583,7 +588,7 @@ const Maintenance = () => {
                     placeholder="0.00"
                     step="0.01"
                     min="0"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-base"
                     required
                   />
                 </div>
@@ -594,7 +599,7 @@ const Maintenance = () => {
                 className="animate-fadeIn"
                 style={{ animationDelay: "400ms" }}
               >
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                   Parts Used
                 </label>
                 <textarea
@@ -602,7 +607,7 @@ const Maintenance = () => {
                   onChange={(e) => setPartsUsed(e.target.value)}
                   placeholder="List any parts that were replaced or used during maintenance..."
                   rows="3"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none transition-all duration-200 hover:border-orange-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none transition-all duration-200 hover:border-orange-300 text-base"
                 />
               </div>
 
@@ -611,7 +616,7 @@ const Maintenance = () => {
                 className="animate-fadeIn"
                 style={{ animationDelay: "500ms" }}
               >
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                   Work Description *
                 </label>
                 <textarea
@@ -619,7 +624,7 @@ const Maintenance = () => {
                   onChange={(e) => setWorkDescription(e.target.value)}
                   placeholder="Describe the maintenance work performed..."
                   rows="4"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none transition-all duration-200 hover:border-orange-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none transition-all duration-200 hover:border-orange-300 text-base"
                   required
                 />
               </div>
@@ -629,14 +634,14 @@ const Maintenance = () => {
                 className="animate-fadeIn"
                 style={{ animationDelay: "600ms" }}
               >
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                   Next Service Due
                 </label>
                 <input
                   type="date"
                   value={nextServiceDate}
                   onChange={(e) => setNextServiceDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-base"
                 />
               </div>
 
@@ -645,13 +650,13 @@ const Maintenance = () => {
                 className="animate-fadeIn"
                 style={{ animationDelay: "700ms" }}
               >
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
                   Asset Status After Service *
                 </label>
                 <select
                   value={assetStatus}
                   onChange={(e) => setAssetStatus(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-base"
                   required
                 >
                   <option value="">Select status...</option>
@@ -666,13 +671,13 @@ const Maintenance = () => {
 
               {/* Submit Button */}
               <div
-                className="pt-4 animate-fadeIn flex space-x-4"
+                className="pt-6 animate-fadeIn flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
                 style={{ animationDelay: "800ms" }}
               >
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white px-6 py-3 rounded-md font-medium transition-all duration-200 flex items-center space-x-2 hover:scale-105 transform disabled:scale-100"
+                  className="bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white px-8 py-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 hover:scale-105 transform disabled:scale-100 shadow-lg hover:shadow-xl text-base"
                 >
                   {isSubmitting ? (
                     <>
@@ -693,7 +698,7 @@ const Maintenance = () => {
                   <button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-md font-medium transition-all duration-200 flex items-center space-x-2 hover:scale-105 transform"
+                    className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 hover:scale-105 transform shadow-lg hover:shadow-xl text-base"
                   >
                     <span>❌</span>
                     <span>Cancel</span>
