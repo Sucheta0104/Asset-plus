@@ -171,7 +171,7 @@ const Reports = () => {
   };
 
   const StatCard = ({ title, value, subtitle, color = "bg-blue-500", loading = false }) => (
-    <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-gray-100 min-h-[120px]">
+    <div className="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100 min-h-[140px] hover:shadow-xl transition-shadow duration-300">
       <div className={`w-3 h-8 sm:h-12 ${color} rounded-full mb-2`}></div>
       {loading ? (
         <div className="animate-pulse">
@@ -190,12 +190,12 @@ const Reports = () => {
   );
 
   const ChartContainer = ({ title, color, loading, error, children, className = "" }) => (
-    <div className={`bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-gray-200 ${className}`}>
+    <div className={`bg-white p-4 sm:p-6 lg:p-8 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 ${className}`}>
       <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <h3 className="text-lg sm:text-xl font-bold text-gray-800">{title}</h3>
+        <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">{title}</h3>
         <div className={`w-3 h-3 ${color} rounded-full`}></div>
       </div>
-      <div className="h-64 sm:h-80">
+      <div className="h-80 sm:h-96">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-500"></div>
@@ -212,17 +212,16 @@ const Reports = () => {
   );
 
   return (
-    <div className="container">
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Asset Management Dashboard</h1>
-          <p className="text-sm sm:text-base text-gray-600">Comprehensive overview of your organization's assets and reports</p>
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
+        {/* Header */}
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Asset Management Dashboard</h1>
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600">Comprehensive overview of your organization's assets and reports</p>
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-10">
           <StatCard 
             title="Total Assets" 
             value={summaryData.totalAssets?.toLocaleString() || "0"} 
@@ -254,7 +253,7 @@ const Reports = () => {
         </div>
 
         {/* Charts Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8">
           {/* Top Row - Department Distribution */}
           <div className="w-full">
             <ChartContainer 
@@ -262,6 +261,7 @@ const Reports = () => {
               color="bg-blue-500"
               loading={loading.department}
               error={errors.department}
+              className="min-h-[400px]"
             >
               {departmentData.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
@@ -321,6 +321,7 @@ const Reports = () => {
               color="bg-indigo-500"
               loading={loading.assetCost}
               error={errors.assetCost}
+              className="min-h-[400px]"
             >
               {assetCostData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
@@ -377,6 +378,7 @@ const Reports = () => {
               color="bg-green-500"
               loading={loading.maintenance}
               error={errors.maintenance}
+              className="min-h-[400px]"
             >
               {maintenanceData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
@@ -446,12 +448,12 @@ const Reports = () => {
 
           {/* Fourth Row - Vendor Portfolio */}
           <div className="w-full">
-            <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-gray-200">
+            <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl shadow-lg border border-gray-200 min-h-[400px]">
               <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-800">Vendor Portfolio</h3>
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">Vendor Portfolio</h3>
                 <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="h-80">
                   {loading.vendor ? (
                     <div className="flex items-center justify-center h-full">
@@ -526,7 +528,8 @@ const Reports = () => {
         </div>
       </div>
     </div>
-    </div>
+    
+
   );
 };
 

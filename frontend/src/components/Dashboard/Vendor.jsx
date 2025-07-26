@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Search, ArrowLeft } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, ArrowLeft, CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
 
 const VendorManagementForm = () => {
   const [vendors, setVendors] = useState([]);
@@ -9,6 +9,7 @@ const VendorManagementForm = () => {
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [toasts, setToasts] = useState([]);
   const [summary, setSummary] = useState({
     total: 0,
     active: 0,
@@ -26,6 +27,31 @@ const VendorManagementForm = () => {
     gstNumber: '',
     status: 'Active'
   });
+
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    };
+  };
+
+  // Toast functions
+  const showToast = (message, type = 'success') => {
+    const id = Date.now();
+    const toast = { id, message, type };
+    setToasts(prev => [...prev, toast]);
+    
+    // Auto remove toast after 5 seconds
+    setTimeout(() => {
+      removeToast(id);
+    }, 5000);
+  };
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
   // Fetch all vendors on component mount
   useEffect(() => {
@@ -82,21 +108,35 @@ const VendorManagementForm = () => {
   const createVendor = async (vendorData) => {
     try {
       setLoading(true);
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
+
       const response = await fetch(API_BASE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(vendorData)
       });
       
-      if (!response.ok) throw new Error('Failed to create vendor');
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
+        throw new Error('Failed to create vendor');
+      }
       const newVendor = await response.json();
       setVendors(prev => [...prev, newVendor]);
       setError('');
+      showToast('Vendor added successfully!', 'success');
       return true;
     } catch (err) {
       setError('Error creating vendor: ' + err.message);
+      showToast('Failed to add vendor: ' + err.message, 'error');
       console.error('Create error:', err);
       return false;
     } finally {
@@ -107,23 +147,37 @@ const VendorManagementForm = () => {
   const updateVendor = async (id, vendorData) => {
     try {
       setLoading(true);
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
+
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(vendorData)
       });
       
-      if (!response.ok) throw new Error('Failed to update vendor');
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
+        throw new Error('Failed to update vendor');
+      }
       const updatedVendor = await response.json();
       setVendors(prev => prev.map(vendor => 
         vendor.id === id || vendor._id === id ? updatedVendor : vendor
       ));
       setError('');
+      showToast('Vendor updated successfully!', 'success');
       return true;
     } catch (err) {
       setError('Error updating vendor: ' + err.message);
+      showToast('Failed to update vendor: ' + err.message, 'error');
       console.error('Update error:', err);
       return false;
     } finally {
@@ -134,18 +188,34 @@ const VendorManagementForm = () => {
   const deleteVendor = async (id) => {
     try {
       setLoading(true);
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
+
       const response = await fetch(`${API_BASE_URL}/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
       
-      if (!response.ok) throw new Error('Failed to delete vendor');
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
+        throw new Error('Failed to delete vendor');
+      }
       setVendors(prev => prev.filter(vendor => 
         vendor.id !== id && vendor._id !== id
       ));
       setError('');
+      showToast('Vendor deleted successfully!', 'success');
       return true;
     } catch (err) {
       setError('Error deleting vendor: ' + err.message);
+      showToast('Failed to delete vendor: ' + err.message, 'error');
       console.error('Delete error:', err);
       return false;
     } finally {
@@ -169,6 +239,20 @@ const VendorManagementForm = () => {
         !formData.phoneNumber.trim() || !formData.emailAddress.trim() || 
         !formData.companyAddress.trim()) {
       setError('Please fill in all required fields');
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.emailAddress)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    // Phone validation (basic)
+    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+    if (!phoneRegex.test(formData.phoneNumber.replace(/\s|-/g, ''))) {
+      setError('Please enter a valid phone number');
       return;
     }
 
@@ -251,9 +335,49 @@ const VendorManagementForm = () => {
     </div>
   );
 
+  // Toast Component
+  const ToastContainer = () => (
+    <div className="fixed top-4 right-4 z-50 space-y-2">
+      {toasts.map((toast) => (
+        <div
+          key={toast.id}
+          className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border min-w-80 max-w-md transform transition-all duration-300 ease-in-out ${
+            toast.type === 'success'
+              ? 'bg-green-50 border-green-200 text-green-800'
+              : toast.type === 'error'
+              ? 'bg-red-50 border-red-200 text-red-800'
+              : 'bg-yellow-50 border-yellow-200 text-yellow-800'
+          }`}
+        >
+          <div className="flex-shrink-0">
+            {toast.type === 'success' && <CheckCircle size={20} className="text-green-600" />}
+            {toast.type === 'error' && <XCircle size={20} className="text-red-600" />}
+            {toast.type === 'warning' && <AlertCircle size={20} className="text-yellow-600" />}
+          </div>
+          <div className="flex-1 text-sm font-medium">
+            {toast.message}
+          </div>
+          <button
+            onClick={() => removeToast(toast.id)}
+            className={`flex-shrink-0 p-1 rounded-full hover:bg-opacity-20 transition-colors ${
+              toast.type === 'success'
+                ? 'hover:bg-green-600'
+                : toast.type === 'error'
+                ? 'hover:bg-red-600'
+                : 'hover:bg-yellow-600'
+            }`}
+          >
+            <X size={16} />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+
   if (showForm) {
     return (
       <div className="container">
+        <ToastContainer />
         <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
           <div className="max-w-4xl mx-auto">
             <div className="mb-6">
@@ -424,6 +548,7 @@ const VendorManagementForm = () => {
 
   return (
     <div className="container">
+      <ToastContainer />
       <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
