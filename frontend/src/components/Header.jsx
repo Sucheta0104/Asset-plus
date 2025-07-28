@@ -46,36 +46,37 @@ export default function Header() {
           <span className="font-bold text-xl text-gray-800">AssetPlus</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-22 text-lg">
-          <Link 
-            to="/" 
-            className={getLinkClasses("/")}
-          >
-            Home
-          </Link>
-          <Link 
-            to="/about" 
-            className={getLinkClasses("/about")}
-          >
-            About
-          </Link>
-          <Link 
-            to="/pricing" 
-            className={getLinkClasses("/pricing")}
-          >
-            Pricing
-          </Link>
-          <Link 
-            to="/contact" 
-            className={getLinkClasses("/contact")}
-          >
-            Contact
-          </Link>
-        </nav>
+        {/* Right side container for navigation and button */}
+        <div className="hidden md:flex items-center gap-8">
+          {/* Desktop Navigation */}
+          <nav className="flex gap-8 text-lg">
+            <Link 
+              to="/" 
+              className={getLinkClasses("/")}
+            >
+              Home
+            </Link>
+            <Link 
+              to="/about" 
+              className={getLinkClasses("/about")}
+            >
+              About
+            </Link>
+            <Link 
+              to="/pricing" 
+              className={getLinkClasses("/pricing")}
+            >
+              Pricing
+            </Link>
+            <Link 
+              to="/contact" 
+              className={getLinkClasses("/contact")}
+            >
+              Contact
+            </Link>
+          </nav>
 
-        {/* Desktop Sign Up Button */}
-        <div className="hidden md:flex gap-2">
+          {/* Desktop Sign Up Button */}
           <Link to="/signup" className="text-gray-700 hover:text-blue-950">
             <ButtonAnimatedGradient/>
           </Link>
