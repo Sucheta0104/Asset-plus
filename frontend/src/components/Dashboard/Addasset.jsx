@@ -84,7 +84,7 @@ const InputField = ({
 export default function AddAssetForm() {
   const [formData, setFormData] = useState({
     assetTag: '',
-    assetName: '',
+    name: '',
     category: '',
     brand: '',
     model: '',
@@ -135,7 +135,7 @@ export default function AddAssetForm() {
       setMessageType('success');
       setFormData({
         assetTag: '',
-        assetName: '',
+        name: '',
         category: '',
         brand: '',
         model: '',
@@ -180,7 +180,7 @@ export default function AddAssetForm() {
   };
 
   const isFormValid = () => {
-    return formData.assetTag.trim() && formData.assetName.trim() && formData.category.trim();
+    return formData.assetTag.trim() && formData.name.trim() && formData.category.trim();
   };
 
   return (
@@ -255,7 +255,7 @@ export default function AddAssetForm() {
               </div>
               {[
                 { label: 'Asset Tag', name: 'assetTag', icon: Tag, required: true },
-                { label: 'Asset Name', name: 'assetName', icon: Package, required: true },
+                { label: 'Asset Name', name: 'name', icon: Package, required: true },
                 {
                   label: 'Category',
                   name: 'category',

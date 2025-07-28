@@ -8,11 +8,11 @@ const assetSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: false,
+    required: true,
   },
   category: {
     type: String,
-    required: false,
+    required: true,
     enum: ["IT", "Furniture", "Vehicle"],
   },
   brand: {
