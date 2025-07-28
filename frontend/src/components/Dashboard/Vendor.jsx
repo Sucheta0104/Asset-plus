@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Search, ArrowLeft, CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, ArrowLeft, CheckCircle, XCircle, AlertCircle, X, Users } from 'lucide-react';
 
 const VendorManagementForm = () => {
   const [vendors, setVendors] = useState([]);
@@ -132,11 +132,11 @@ const VendorManagementForm = () => {
       const newVendor = await response.json();
       setVendors(prev => [...prev, newVendor]);
       setError('');
-      showToast('Vendor added successfully!', 'success');
+      showToast('Vendor created successfully!', 'success');
       return true;
     } catch (err) {
       setError('Error creating vendor: ' + err.message);
-      showToast('Failed to add vendor: ' + err.message, 'error');
+      showToast('Failed to create vendor: ' + err.message, 'error');
       console.error('Create error:', err);
       return false;
     } finally {
@@ -243,7 +243,7 @@ const VendorManagementForm = () => {
     }
 
     // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
     if (!emailRegex.test(formData.emailAddress)) {
       setError('Please enter a valid email address');
       return;
@@ -322,52 +322,52 @@ const VendorManagementForm = () => {
   // Error Display Component
   const ErrorMessage = ({ message }) => (
     message ? (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-        {message}
+      <div className="bg-red-50 border-l-4 border-red-400 text-red-700 p-4 rounded mb-6 shadow-sm">
+        <div className="flex items-center">
+          <AlertCircle className="h-5 w-5 text-red-500 mr-3" />
+          <span className="font-medium">{message}</span>
+        </div>
       </div>
     ) : null
   );
 
-  // Loading Indicator
   const LoadingSpinner = () => (
-    <div className="flex justify-center items-center py-4">
-      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+    <div className="flex justify-center items-center py-8">
+      <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-200 border-t-blue-500"></div>
+      <span className="ml-3 text-gray-500">Loading...</span>
     </div>
   );
 
-  // Toast Component
-  const ToastContainer = () => (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
+  const CustomToastContainer = () => (
+    <div className="fixed top-4 right-4 z-50 space-y-3">
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border min-w-80 max-w-md transform transition-all duration-300 ease-in-out ${
+          className={`flex items-start gap-3 p-4 rounded-lg shadow-lg border-l-4 ${
             toast.type === 'success'
-              ? 'bg-green-50 border-green-200 text-green-800'
+              ? 'bg-green-50 border-green-500 text-green-800'
               : toast.type === 'error'
-              ? 'bg-red-50 border-red-200 text-red-800'
-              : 'bg-yellow-50 border-yellow-200 text-yellow-800'
+              ? 'bg-red-50 border-red-500 text-red-800'
+              : 'bg-yellow-50 border-yellow-500 text-yellow-800'
           }`}
         >
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 mt-0.5">
             {toast.type === 'success' && <CheckCircle size={20} className="text-green-600" />}
             {toast.type === 'error' && <XCircle size={20} className="text-red-600" />}
             {toast.type === 'warning' && <AlertCircle size={20} className="text-yellow-600" />}
           </div>
-          <div className="flex-1 text-sm font-medium">
-            {toast.message}
+          <div className="flex-1 text-sm">
+            <p className="font-medium">
+              {toast.type === 'success' ? 'Success' : 
+               toast.type === 'error' ? 'Error' : 'Warning'}
+            </p>
+            <p className="text-gray-600">{toast.message}</p>
           </div>
           <button
             onClick={() => removeToast(toast.id)}
-            className={`flex-shrink-0 p-1 rounded-full hover:bg-opacity-20 transition-colors ${
-              toast.type === 'success'
-                ? 'hover:bg-green-600'
-                : toast.type === 'error'
-                ? 'hover:bg-red-600'
-                : 'hover:bg-yellow-600'
-            }`}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <X size={16} />
+            <X size={18} />
           </button>
         </div>
       ))}
@@ -376,41 +376,40 @@ const VendorManagementForm = () => {
 
   if (showForm) {
     return (
-      <div className="container">
-        <ToastContainer />
-        <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-6">
-              <div className="flex items-center gap-4 mb-4">
-                <button 
-                  onClick={resetForm}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
-                  disabled={loading}
-                >
-                  <ArrowLeft size={20} />
-                  <span className="hidden sm:inline">Back</span>
-                </button>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-                  {editingVendor ? 'Edit Vendor' : 'Add New Vendor'}
-                </h1>
-              </div>
+      <div className="container mx-auto px-4 py-8">
+        <CustomToastContainer />
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={resetForm}
+                className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
+                disabled={loading}
+              >
+                <ArrowLeft size={20} />
+                <span className="font-medium">Back to Vendors</span>
+              </button>
+              <h1 className="text-2xl font-bold text-gray-800">
+                {editingVendor ? 'Edit Vendor' : 'Add New Vendor'}
+              </h1>
             </div>
+          </div>
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
-              <ErrorMessage message={error} />
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <ErrorMessage message={error} />
+            
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Vendor Name *
+                      Vendor Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="vendorName"
                       value={formData.vendorName}
                       onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-colors text-gray-800 placeholder-gray-400"
                       placeholder="Enter vendor name"
                       required
                       disabled={loading}
@@ -419,14 +418,14 @@ const VendorManagementForm = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Contact Person Name *
+                      Contact Person <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="contactPerson"
                       value={formData.contactPerson}
                       onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-colors text-gray-800 placeholder-gray-400"
                       placeholder="Enter contact person name"
                       required
                       disabled={loading}
@@ -435,14 +434,14 @@ const VendorManagementForm = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number *
+                      Phone Number <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-colors text-gray-800 placeholder-gray-400"
                       placeholder="Enter phone number"
                       required
                       disabled={loading}
@@ -451,14 +450,14 @@ const VendorManagementForm = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
+                      Email Address <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
                       name="emailAddress"
                       value={formData.emailAddress}
                       onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-colors text-gray-800 placeholder-gray-400"
                       placeholder="Enter email address"
                       required
                       disabled={loading}
@@ -474,7 +473,7 @@ const VendorManagementForm = () => {
                       name="gstNumber"
                       value={formData.gstNumber}
                       onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-colors text-gray-800 placeholder-gray-400"
                       placeholder="Enter GST number (optional)"
                       disabled={loading}
                     />
@@ -482,13 +481,13 @@ const VendorManagementForm = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Status *
+                      Status <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="status"
                       value={formData.status}
                       onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-colors text-gray-800"
                       required
                       disabled={loading}
                     >
@@ -500,29 +499,29 @@ const VendorManagementForm = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Address *
+                    Company Address <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     name="companyAddress"
                     value={formData.companyAddress}
                     onChange={handleInputChange}
                     rows="3"
-                    className="w-full px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-colors text-gray-800 placeholder-gray-400"
                     placeholder="Enter complete company address"
                     required
                     disabled={loading}
                   />
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
+                    className="flex-1 sm:flex-none px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:ring-offset-2 transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-sm"
                     disabled={loading}
                   >
                     {loading ? (
                       <div className="flex items-center justify-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
                         {editingVendor ? 'Updating...' : 'Adding...'}
                       </div>
                     ) : (
@@ -532,7 +531,7 @@ const VendorManagementForm = () => {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="w-full sm:w-auto px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="flex-1 sm:flex-none px-6 py-2.5 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-100 focus:ring-offset-2 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                     disabled={loading}
                   >
                     Cancel
@@ -542,81 +541,102 @@ const VendorManagementForm = () => {
             </div>
           </div>
         </div>
-      </div>
+
     );
   }
 
   return (
-    <div className="container">
-      <ToastContainer />
-      <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Vendor Management</h1>
-                <p className="text-gray-600 text-sm sm:text-base">Manage all vendor information and contacts</p>
-              </div>
-              <button
-                onClick={() => setShowForm(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
-                disabled={loading}
-              >
-                <Plus size={20} />
-                <span className="hidden sm:inline">Add Vendor</span>
-                <span className="sm:hidden">Add</span>
-              </button>
+    <div className="container mx-auto px-4 py-8">
+      <CustomToastContainer />
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">Vendor Management</h1>
+              <p className="text-gray-500 mt-1">Manage all vendor information and contacts</p>
             </div>
+            <button
+              onClick={() => setShowForm(true)}
+              className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:ring-offset-2 transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-sm"
+              disabled={loading}
+            >
+              <Plus size={18} />
+              <span>Add Vendor</span>
+            </button>
           </div>
+        </div>
 
           <ErrorMessage message={error} />
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-2">
-                {summary.total || vendors.length}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-500 mb-1">Total Vendors</p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {summary.total || vendors.length}
+                  </p>
+                </div>
+                <div className="bg-blue-50 p-3 rounded-lg text-blue-600">
+                  <Users size={20} />
+                </div>
               </div>
-              <div className="text-gray-600 text-sm sm:text-base">Total Vendors</div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-2">
-                {summary.active || vendors.filter(v => v.status === 'Active').length}
+            <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-500 mb-1">Active Vendors</p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {summary.active || vendors.filter(v => v.status === 'Active').length}
+                  </p>
+                </div>
+                <div className="bg-green-50 p-3 rounded-lg text-green-600">
+                  <CheckCircle size={20} />
+                </div>
               </div>
-              <div className="text-gray-600 text-sm sm:text-base">Active Vendors</div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-red-600 mb-2">
-                {summary.inactive || vendors.filter(v => v.status === 'Inactive').length}
+            <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-500 mb-1">Inactive Vendors</p>
+                  <p className="text-2xl font-bold text-amber-600">
+                    {summary.inactive || vendors.filter(v => v.status === 'Inactive').length}
+                  </p>
+                </div>
+                <div className="bg-amber-50 p-3 rounded-lg text-amber-600">
+                  <XCircle size={20} />
+                </div>
               </div>
-              <div className="text-gray-600 text-sm sm:text-base">Inactive Vendors</div>
             </div>
           </div>
 
           {/* Search and Filter */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
+          <div className="bg-white rounded-xl border border-gray-100 p-5 mb-8 shadow-sm">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                 <input
                   type="text"
                   placeholder="Search by vendor name, contact person, or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-colors text-gray-700 placeholder-gray-400"
                   disabled={loading}
                 />
               </div>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                disabled={loading}
-              >
-                <option value="All Status">All Status</option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
+              <div className="w-full sm:w-48">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-colors text-gray-700"
+                  disabled={loading}
+                >
+                  <option value="All Status">All Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -624,17 +644,17 @@ const VendorManagementForm = () => {
 
           {/* Empty State */}
           {!loading && vendors.length === 0 && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-              <div className="text-gray-400 mb-4">
-                <Plus size={48} className="mx-auto" />
+            <div className="bg-white rounded-xl border border-gray-100 p-8 text-center shadow-sm">
+              <div className="text-gray-300 mb-4">
+                <Users size={64} className="mx-auto opacity-40" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No vendors found</h3>
-              <p className="text-gray-500 mb-4">Get started by adding your first vendor</p>
+              <h3 className="text-lg font-medium text-gray-700 mb-2">No vendors found</h3>
+              <p className="text-gray-500 mb-6">Get started by adding your first vendor</p>
               <button
                 onClick={() => setShowForm(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:ring-offset-2 transition-colors shadow-sm"
               >
-                <Plus size={20} />
+                <Plus size={18} />
                 Add First Vendor
               </button>
             </div>
@@ -642,9 +662,9 @@ const VendorManagementForm = () => {
 
           {/* Vendors Table - Desktop */}
           {!loading && vendors.length > 0 && (
-            <div className="hidden lg:block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="hidden lg:block bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -662,30 +682,30 @@ const VendorManagementForm = () => {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white divide-y divide-gray-100">
                     {filteredVendors.map((vendor) => (
-                      <tr key={vendor.id || vendor._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">
+                      <tr key={vendor.id || vendor._id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4">
                           <div className="text-sm font-medium text-gray-900">{vendor.vendorName}</div>
-                          <div className="text-sm text-gray-500 truncate max-w-xs">{vendor.companyAddress}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {vendor.contactPerson}
+                          <div className="text-xs text-gray-500 truncate max-w-xs">{vendor.companyAddress}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{vendor.phoneNumber}</div>
-                          <div className="text-sm text-gray-500">{vendor.emailAddress}</div>
+                          <div className="text-sm text-gray-900">{vendor.contactPerson}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900">{vendor.phoneNumber}</div>
+                          <div className="text-xs text-gray-500">{vendor.emailAddress}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {vendor.gstNumber || 'N/A'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             vendor.status === 'Active' 
                               ? 'bg-green-100 text-green-800' 
                               : 'bg-red-100 text-red-800'
@@ -693,19 +713,21 @@ const VendorManagementForm = () => {
                             {vendor.status}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div className="flex gap-2">
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex justify-end gap-3">
                             <button
                               onClick={() => handleEdit(vendor)}
-                              className="text-blue-600 hover:text-blue-800 transition-colors disabled:text-blue-400"
+                              className="text-blue-600 hover:text-blue-900 transition-colors disabled:opacity-50"
                               disabled={loading}
+                              title="Edit vendor"
                             >
                               <Edit2 size={16} />
                             </button>
                             <button
                               onClick={() => handleDelete(vendor)}
-                              className="text-red-600 hover:text-red-800 transition-colors disabled:text-red-400"
+                              className="text-red-600 hover:text-red-900 transition-colors disabled:opacity-50"
                               disabled={loading}
+                              title="Delete vendor"
                             >
                               <Trash2 size={16} />
                             </button>
@@ -723,56 +745,61 @@ const VendorManagementForm = () => {
           {!loading && vendors.length > 0 && (
             <div className="lg:hidden space-y-4">
               {filteredVendors.map((vendor) => (
-                <div key={vendor.id || vendor._id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{vendor.vendorName}</h3>
+                <div key={vendor.id || vendor._id} className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex-1">
+                      <h3 className="text-base font-semibold text-gray-900">{vendor.vendorName}</h3>
                       <p className="text-sm text-gray-600">{vendor.contactPerson}</p>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(vendor)}
-                        className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors disabled:text-blue-400"
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
                         disabled={loading}
+                        title="Edit vendor"
                       >
                         <Edit2 size={16} />
                       </button>
                       <button
                         onClick={() => handleDelete(vendor)}
-                        className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors disabled:text-red-400"
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                         disabled={loading}
+                        title="Delete vendor"
                       >
                         <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
                   
-                  <div className="space-y-2 mb-3">
-                    <div className="flex flex-col sm:flex-row sm:justify-between">
-                      <span className="text-sm text-gray-500">Phone:</span>
-                      <span className="text-sm text-gray-900">{vendor.phoneNumber}</span>
+                  <div className="space-y-3 mb-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">Phone</span>
+                      <span className="text-sm font-medium text-gray-900">{vendor.phoneNumber}</span>
                     </div>
-                    <div className="flex flex-col sm:flex-row sm:justify-between">
-                      <span className="text-sm text-gray-500">Email:</span>
-                      <span className="text-sm text-gray-900 break-all">{vendor.emailAddress}</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">Email</span>
+                      <span className="text-sm text-blue-600 break-all max-w-[180px] text-right">{vendor.emailAddress}</span>
                     </div>
-                    <div className="flex flex-col sm:flex-row sm:justify-between">
-                      <span className="text-sm text-gray-500">GST:</span>
-                      <span className="text-sm text-gray-900">{vendor.gstNumber || 'N/A'}</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">GST</span>
+                      <span className="text-sm text-gray-700">{vendor.gstNumber || 'N/A'}</span>
                     </div>
-                    <div className="flex flex-col sm:flex-row sm:justify-between">
-                      <span className="text-sm text-gray-500">Address:</span>
-                      <span className="text-sm text-gray-900 text-right">{vendor.companyAddress}</span>
+                    <div className="pt-2 border-t border-gray-100">
+                      <p className="text-xs text-gray-500 mb-1">Address</p>
+                      <p className="text-sm text-gray-700">{vendor.companyAddress}</p>
                     </div>
                   </div>
                   
-                  <div className="flex justify-between items-center">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                  <div className="flex justify-between items-center pt-3 border-t border-gray-100">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       vendor.status === 'Active' 
                         ? 'bg-green-100 text-green-800' 
                         : 'bg-red-100 text-red-800'
                     }`}>
                       {vendor.status}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {new Date(vendor.updatedAt || vendor.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
@@ -781,8 +808,9 @@ const VendorManagementForm = () => {
           )}
         </div>
       </div>
-    </div>
+    
   );
 };
+
 
 export default VendorManagementForm;

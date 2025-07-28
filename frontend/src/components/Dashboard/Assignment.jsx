@@ -182,53 +182,53 @@ const AssignmentPage = () => {
     }
   };
 
-  // Update the stats section to use summary data
+  // Stats Section with white theme
   const StatsSection = () => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+      <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-600">Total Assignments</p>
-            <p className="text-3xl font-bold text-gray-900">{summary.totalAssignments}</p>
+            <p className="text-sm text-gray-500">Total Assignments</p>
+            <p className="text-2xl font-bold text-gray-800">{summary.totalAssignments}</p>
           </div>
-          <div className="bg-blue-100 p-3 rounded-full">
-            <Users className="h-6 w-6 text-blue-600" />
+          <div className="bg-blue-50 p-3 rounded-full text-blue-600">
+            <Users className="h-5 w-5" />
           </div>
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow" style={{ animationDelay: '0.1s' }}>
+      <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-600">Active</p>
-            <p className="text-3xl font-bold text-gray-900">{summary.activeAssignments}</p>
+            <p className="text-sm text-gray-500">Active</p>
+            <p className="text-2xl font-bold text-gray-800">{summary.activeAssignments}</p>
           </div>
-          <div className="bg-green-100 p-3 rounded-full">
-            <CheckCircle className="h-6 w-6 text-green-600" />
+          <div className="bg-green-50 p-3 rounded-full text-green-600">
+            <CheckCircle className="h-5 w-5" />
           </div>
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow" style={{ animationDelay: '0.2s' }}>
+      <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-600">Returned</p>
-            <p className="text-3xl font-bold text-gray-900">{summary.returnedAssignments}</p>
+            <p className="text-sm text-gray-500">Returned</p>
+            <p className="text-2xl font-bold text-gray-800">{summary.returnedAssignments}</p>
           </div>
-          <div className="bg-gray-100 p-3 rounded-full">
-            <RotateCcw className="h-6 w-6 text-gray-600" />
+          <div className="bg-gray-50 p-3 rounded-full text-gray-600">
+            <RotateCcw className="h-5 w-5" />
           </div>
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow" style={{ animationDelay: '0.3s' }}>
+      <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-600">Available Assets</p>
-            <p className="text-3xl font-bold text-gray-900">{summary.availableAssets}</p>
+            <p className="text-sm text-gray-500">Available Assets</p>
+            <p className="text-2xl font-bold text-gray-800">{summary.availableAssets}</p>
           </div>
-          <div className="bg-yellow-100 p-3 rounded-full">
-            <Package className="h-6 w-6 text-yellow-600" />
+          <div className="bg-yellow-50 p-3 rounded-full text-yellow-600">
+            <Package className="h-5 w-5" />
           </div>
         </div>
       </div>
@@ -240,39 +240,47 @@ const AssignmentPage = () => {
   };
 
   return (
-    <div className="container">
-     <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Asset Assignment</h1>
-        <p className="text-gray-600">Manage asset assignments to employeeNames</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Asset Assignment</h1>
+        <p className="text-gray-600">Manage asset assignments to employees</p>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-4 mb-8">
+      <div className="flex flex-wrap gap-4 mb-8">
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-200"
+          className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
         >
-          <Plus size={20} />
+          <Plus size={18} />
           Assign Asset
         </button>
         <Link
           to="/dashboard/assignment/assignmenthistory"
-          className="flex items-center gap-2 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-200"
+          className="flex items-center gap-2 bg-white text-gray-700 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors shadow-sm"
         >
-          <Eye size={20} />
+          <Eye size={18} />
           View History
         </Link>
       </div>
 
       {/* Assignment Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 animate-slide-up">
-            <h2 className="text-xl font-bold mb-4">
-              {editingAssignment ? 'Update Assignment' : 'Assign New Asset'}
-            </h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-800">
+                {editingAssignment ? 'Update Assignment' : 'Assign New Asset'}
+              </h2>
+              <button 
+                onClick={resetForm}
+                className="text-gray-400 hover:text-gray-600"
+                aria-label="Close"
+              >
+                <X size={20} />
+              </button>
+            </div>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Asset Tag</label>
@@ -281,69 +289,69 @@ const AssignmentPage = () => {
                   name="assetTag"
                   value={formData.assetTag}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Asset Name</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Asset Name</label>
                 <input
                   type="text"
                   name="assetName"
                   value={formData.assetName}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">employeeName</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">employeeName</label>
                 <input
                   type="text"
                   name="employeeName"
                   value={formData.employeeName}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">employeeID</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">employeeID</label>
                 <input
                   type="text"
                   name="employeeId"
                   value={formData.employeeId}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Department</label>
                 <input
                   type="text"
                   name="department"
                   value={formData.department}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Assigned Date</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Assigned Date</label>
                 <input
                   type="date"
                   name="assignmentDate"
                   value={formData.assignmentDate}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Status</label>
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
                   <option value="Active">Active</option>
                   <option value="Returned">Returned</option>
@@ -358,7 +366,7 @@ const AssignmentPage = () => {
                 </button>
                 <button
                   onClick={resetForm}
-                  className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors"
+                  className="bg-gray-600 text-gray-200 px-4 py-2 rounded-lg hover:bg-gray-500 transition-colors"
                 >
                   Cancel
                 </button>
@@ -375,7 +383,7 @@ const AssignmentPage = () => {
           <input
             type="text"
             placeholder="Search assignments by asset, employee, or department..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             onChange={(e) => {
               // Debounce the search to avoid too many API calls
               const timeoutId = setTimeout(() => {
@@ -391,141 +399,100 @@ const AssignmentPage = () => {
       <StatsSection />
 
       {/* Current Assignments */}
-      <div className="bg-white rounded-lg shadow-sm">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Current Assignments</h2>
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-800">Current Assignments</h2>
         </div>
         
         {assignments.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Package className="h-8 w-8 text-gray-400" />
+            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Package className="h-8 w-8 text-blue-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No assignments yet</h3>
-            <p className="text-gray-600 mb-4">Start by assigning assets to employeeNames</p>
+            <h3 className="text-lg font-medium text-gray-800 mb-2">No assignments yet</h3>
+            <p className="text-gray-500 mb-4">Start by assigning assets to employees</p>
             <button
               onClick={() => setShowForm(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
             >
               Assign First Asset
             </button>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Tag</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">employeeName</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">employeeName ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {assignments.map((assignment, index) => (
-                  <tr key={assignment._id || index} className="hover:bg-gray-50 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {renderTableCell(assignment.assetId?.assetTag)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {renderTableCell(assignment.assetId?.name)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {renderTableCell(assignment.employeeName)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {renderTableCell(assignment.employeeId)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {renderTableCell(assignment.department)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {assignment.assignmentDate ? new Date(assignment.assignmentDate).toLocaleDateString() : '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        assignment.status === 'Active' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {renderTableCell(assignment.status)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <div className="flex space-x-3">
-                        <button 
-                          onClick={() => handleEdit(assignment)}
-                          className="text-blue-600 hover:text-blue-800 transition-colors"
-                          title="Edit Assignment"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        <button 
-                          onClick={() => handleDelete(assignment._id)}
-                          className="text-red-600 hover:text-red-800 transition-colors"
-                          title="Delete Assignment"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Tag</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {assignments.map((assignment, index) => (
+                    <tr key={assignment._id || index} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {renderTableCell(assignment.assetId?.assetTag)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {renderTableCell(assignment.assetId?.name)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {renderTableCell(assignment.employeeName)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {renderTableCell(assignment.employeeId)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {renderTableCell(assignment.department)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {assignment.assignmentDate ? new Date(assignment.assignmentDate).toLocaleDateString() : '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          assignment.status === 'Active' 
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {renderTableCell(assignment.status)}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <div className="flex space-x-2">
+                          <button 
+                            onClick={() => handleEdit(assignment)}
+                            className="text-blue-600 hover:text-blue-800 transition-colors p-1 rounded hover:bg-blue-50"
+                            title="Edit Assignment"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(assignment._id)}
+                            className="text-red-600 hover:text-red-800 transition-colors p-1 rounded hover:bg-red-50"
+                            title="Delete Assignment"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
-
+      
       {/* Render nested routes here */}
       <Outlet />
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        @keyframes slide-up {
-          from { 
-            opacity: 0; 
-            transform: translateY(20px); 
-          }
-          to { 
-            opacity: 1; 
-            transform: translateY(0); 
-          }
-        }
-        
-        @keyframes fade-in-up {
-          from { 
-            opacity: 0; 
-            transform: translateY(10px); 
-          }
-          to { 
-            opacity: 1; 
-            transform: translateY(0); 
-          }
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.3s ease-out;
-        }
-        
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out;
-        }
-        
-        .animate-fade-in-up {
-          animation: fade-in-up 0.5s ease-out;
-          animation-fill-mode: both;
-        }
-      `}</style>
-    </div>
     </div>
   );
 };

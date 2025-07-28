@@ -42,15 +42,15 @@ const Sidebar = () => {
       {/* Mobile Menu Toggle Button */}
       <button
         onClick={toggleMobileMenu}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-slate-800 text-white rounded-lg shadow-lg hover:bg-slate-700 transition-colors duration-200"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow hover:bg-blue-50 transition-colors duration-200 border border-blue-200"
       >
-        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        {isMobileMenuOpen ? <X className="w-5 h-5 text-gray-700" /> : <Menu className="w-5 h-5 text-gray-700" />}
       </button>
  
       {/* Mobile Overlay (for when menu is open) */}
       {isMobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+          className="lg:hidden fixed inset-0 bg-black/20 z-40 transition-opacity duration-300 backdrop-blur-sm"
           onClick={toggleMobileMenu}
         />
       )}
@@ -58,16 +58,16 @@ const Sidebar = () => {
       {/* Sidebar Container */}
       <div
         className={`
-          fixed lg:static inset-y-0 left-0 z-40 w-64
-          bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900
+          fixed top-16 left-0 h-[calc(100vh-4rem)] z-40 w-64
+          bg-white shadow-lg border-r border-blue-100
           transform transition-transform duration-300 ease-in-out
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-          shadow-xl lg:shadow-none
+          overflow-y-auto
         `}
       >
         {/* Main Menu Header */}
         <nav className="p-4 space-y-2">
-          <h1 className="text-xl font-bold text-white mb-4">
+          <h1 className="text-xl font-bold text-gray-900 mb-4 px-2">
             Main Menu
           </h1>
  
@@ -85,9 +85,9 @@ const Sidebar = () => {
                 className={({ isActive }) => `
                   w-full flex items-center justify-between px-3 py-3 rounded-lg text-left
                   transition-all duration-200 ease-in-out group
-                  ${isActive // Apply active styles based on NavLink's isActive
-                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg transform scale-105'
-                    : 'text-slate-300 hover:bg-slate-700 hover:text-white hover:transform hover:scale-102'}
+                  ${isActive
+                    ? 'bg-blue-100 text-blue-900 font-medium transform scale-[1.02]'
+                    : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'}
                   animate-fadeIn
                 `}
                 style={{
@@ -104,7 +104,7 @@ const Sidebar = () => {
                       <Icon
                         className={`
                           w-5 h-5 transition-all duration-200
-                          ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}
+                          ${isActive ? 'text-blue-900' : 'text-gray-600 group-hover:text-blue-700'}
                         `}
                       />
                       <span className="font-medium">{item.name}</span>
@@ -114,8 +114,8 @@ const Sidebar = () => {
                       className={`
                         w-4 h-4 transition-all duration-200
                         ${isActive
-                          ? 'text-white opacity-100'
-                          : 'text-slate-400 opacity-0 group-hover:opacity-100 group-hover:text-white'}
+                          ? 'text-blue-900 opacity-100'
+                          : 'text-gray-400 opacity-0 group-hover:opacity-100 group-hover:text-blue-700'}
                       `}
                     />
                   </>
@@ -126,9 +126,9 @@ const Sidebar = () => {
         </nav>
  
         {/* Footer */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-blue-100">
           <div className="text-center">
-            <p className="text-slate-500 text-sm">© 2024 AssetPlus</p>
+            <p className="text-gray-600 text-sm">© 2024 AssetPlus</p>
           </div>
         </div>
       </div>

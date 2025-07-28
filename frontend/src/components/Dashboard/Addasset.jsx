@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, DollarSign, MapPin, Package, Tag, User, Building, Hash, Monitor, FileText } from 'lucide-react';
+import { ArrowLeft, Calendar, DollarSign, MapPin, Package, Tag, User, Building, Hash, Monitor, FileText, MapPin as Mappin } from 'lucide-react';
 import axios from 'axios';
 
 // ✅ Move this OUTSIDE of AddAssetForm
@@ -11,6 +11,7 @@ const InputField = ({
   icon: Icon,
   required = false,
   value,
+  options,
   onChange,
   onFocus,
   onBlur,
@@ -29,7 +30,25 @@ const InputField = ({
           }`}
         />
       </div>
-      {type === 'textarea' ? (
+      {type === 'select' ? (
+        <select
+          name={name}
+          value={value}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white hover:border-gray-400 ${
+            focusedField === name ? 'shadow-lg border-blue-500' : 'shadow-sm'
+          }`}
+          required={required}
+        >
+          {options?.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      ) : type === 'textarea' ? (
         <textarea
           name={name}
           value={value}
@@ -75,7 +94,8 @@ export default function AddAssetForm() {
     vendor: '',
     location: '',
     warrantyExpiry: '',
-    description: ''
+    description: '',
+    department: ''
   });
 
   const [focusedField, setFocusedField] = useState('');
@@ -125,7 +145,8 @@ export default function AddAssetForm() {
         vendor: '',
         location: '',
         warrantyExpiry: '',
-        description: ''
+        description: '',
+        department: ''
       });
 
       setTimeout(() => {
@@ -201,17 +222,60 @@ export default function AddAssetForm() {
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+              {/* Department Field */}
+              <div className="group">
+                <label className="block text-sm font-medium text-gray-700 mb-2 transition-colors duration-200 group-focus-within:text-blue-600">
+                  Department
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                    <Building className={`h-5 w-5 transition-colors duration-200 ${
+                      focusedField === 'department' ? 'text-blue-500' : 'text-gray-400'
+                    }`} />
+                  </div>
+                  <select
+                    name="department"
+                    value={formData.department}
+                    onChange={handleInputChange}
+                    onFocus={() => setFocusedField('department')}
+                    onBlur={() => setFocusedField('')}
+                    className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white hover:border-gray-400 ${
+                      focusedField === 'department' ? 'shadow-lg border-blue-500' : 'shadow-sm'
+                    }`}
+                    required
+                  >
+                    <option value="">Select Department</option>
+                    <option value="IT">IT</option>
+                    <option value="Sales">Sales</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="HR">HR</option>
+                  </select>
+                </div>
+              </div>
               {[
                 { label: 'Asset Tag', name: 'assetTag', icon: Tag, required: true },
                 { label: 'Asset Name', name: 'assetName', icon: Package, required: true },
-                { label: 'Category', name: 'category', icon: Monitor, required: true },
+                {
+                  label: 'Category',
+                  name: 'category',
+                  icon: Monitor,
+                  required: true,
+                  type: 'select',
+                  options: [
+                    { value: '', label: 'Select Category' },
+                    { value: 'IT', label: 'IT' },
+                    { value: 'Furniture', label: 'Furniture' },
+                    { value: 'Vehicle', label: 'Vehicle' }
+                  ]
+                },
                 { label: 'Brand', name: 'brand', icon: Building },
                 { label: 'Model', name: 'model', icon: Package },
                 { label: 'Serial Number', name: 'serialNumber', icon: Hash },
                 { label: 'Purchase Date', name: 'purchaseDate', icon: Calendar, type: 'date' },
                 { label: 'Cost', name: 'cost', icon: DollarSign, type: 'number' },
                 { label: 'Vendor', name: 'vendor', icon: User },
-                { label: 'Location', name: 'location', icon: MapPin },
+                { label: 'Location', name: 'location', icon: Mappin },
                 { label: 'Warranty Expiry', name: 'warrantyExpiry', icon: Calendar, type: 'date' }
               ].map((field) => (
                 <InputField

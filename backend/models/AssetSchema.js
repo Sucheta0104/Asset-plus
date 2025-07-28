@@ -13,7 +13,7 @@ const assetSchema = new mongoose.Schema({
   category: {
     type: String,
     required: false,
-    // enum: ["IT", "Furniture", "Vehicle"],
+    enum: ["IT", "Furniture", "Vehicle"],
   },
   brand: {
     type: String,

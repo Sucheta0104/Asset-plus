@@ -277,8 +277,8 @@ const Maintenance = () => {
               </h3>
               <p className="text-sm sm:text-base text-blue-700 font-medium">Total Maintenance Logs</p>
             </div>
-            <div className="bg-green-50 border border-green-200 p-6 rounded-xl text-center transform hover:scale-105 transition-transform duration-200 shadow-sm">
-              <h3 className="text-2xl sm:text-3xl font-bold text-green-900 animate-countUp">
+            <div className="bg-blue-50 border border-blue-200 p-6 rounded-xl text-center transform hover:scale-105 transition-transform duration-200 shadow-sm">
+              <h3 className="text-2xl sm:text-3xl font-bold text-blue-900 animate-countUp">
                 ₹
                 {summary?.totalCost ||
                   maintenanceHistory.reduce(
@@ -286,16 +286,16 @@ const Maintenance = () => {
                     0
                   )}
               </h3>
-              <p className="text-sm sm:text-base text-green-700 font-medium">Total Cost</p>
+              <p className="text-sm sm:text-base text-blue-700 font-medium">Total Cost</p>
             </div>
-            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-xl text-center transform hover:scale-105 transition-transform duration-200 shadow-sm">
-              <h3 className="text-2xl sm:text-3xl font-bold text-yellow-900 animate-countUp">
+            <div className="bg-blue-50 border border-blue-200 p-6 rounded-xl text-center transform hover:scale-105 transition-transform duration-200 shadow-sm">
+              <h3 className="text-2xl sm:text-3xl font-bold text-blue-900 animate-countUp">
                 {summary?.followUpNeeded ||
                   maintenanceHistory.filter(
                     (log) => log.assetStatus === "Needs Follow-up"
                   ).length}
               </h3>
-              <p className="text-sm sm:text-base text-yellow-700 font-medium">Follow-up Needed</p>
+              <p className="text-sm sm:text-base text-blue-700 font-medium">Follow-up Needed</p>
             </div>
           </div>
 
@@ -383,19 +383,19 @@ const Maintenance = () => {
   );
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen w-full bg-white">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
-        <div className="bg-white p-6 lg:p-8 rounded-xl shadow-lg border border-gray-200 mb-8 animate-slideDown hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-blue-100 rounded-xl shadow-2xl border border-blue-100 p-6 sm:p-8 mb-8 animate-slideIn">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 flex items-center space-x-2">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-900 mb-2 flex items-center space-x-2">
                 <span className="animate-bounce">🔧</span>
                 <span>
                   {isEditing ? "Edit Maintenance Record" : "Maintenance"}
                 </span>
               </h1>
-              <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
+              <p className="text-blue-700 text-base sm:text-lg animate-slideUp">
                 {isEditing
                   ? "Update maintenance record details"
                   : "Record repair activity and maintenance logs"}
@@ -403,7 +403,7 @@ const Maintenance = () => {
             </div>
             <button
               onClick={() => setShowHistory(!showHistory)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 hover:scale-105 transform shadow-lg hover:shadow-xl"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 hover:scale-105 transform shadow-lg hover:shadow-xl"
             >
               <span>📋</span>
               <span>{showHistory ? "Hide History" : "View History"}</span>

@@ -176,24 +176,64 @@ const AssignmentHistory = () => {
 
   const exportReport = async () => {
     try {
-      toast.info('Exporting report...');
-      // You can implement CSV/PDF export here
-      const csvContent = assignments.map(assignment => ({
-        AssetTag: assignment.assetId?.assetTag || assignment.assetTag || '',
-        AssetName: assignment.assetId?.name || assignment.assetName || '',
-        Employee: assignment.employeeName || '',
-        EmployeeID: assignment.employeeId || '',
-        Department: assignment.department || '',
-        AssignedDate: assignment.assignmentDate || '',
-        ReturnedDate: assignment.returnedDate || '',
-        Status: assignment.status || ''
-      }));
+      toast.info('Exporting report summary...');
+      const token = localStorage.getItem('token');
       
-      console.log('Export data:', csvContent);
-      toast.success('Report data prepared. Check console for export data.');
+      // Fetch the report summary from the backend
+      const response = await axios.get('http://localhost:5000/api/reports/summary', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const reportData = response.data;
+      
+      // Format the data for CSV
+      const csvRows = [];
+      
+      // Add summary section
+      csvRows.push('ASSET MANAGEMENT REPORT SUMMARY');
+      csvRows.push('');
+      csvRows.push('SUMMARY');
+      csvRows.push(`Total Assets,${reportData.totalAssets}`);
+      csvRows.push(`Total Asset Value,$${reportData.totalAssetValue?.toLocaleString() || '0'}`);
+      csvRows.push(`Total Maintenance Cost,$${reportData.totalMaintenanceCost?.toLocaleString() || '0'}`);
+      csvRows.push(`Total Vendors,${reportData.totalVendors?.length || 0}`);
+      csvRows.push(`Total Departments,${reportData.totalDepartments?.length || 0}`);
+      
+      // Add assignments section
+      csvRows.push('');
+      csvRows.push('ASSIGNMENTS');
+      csvRows.push('Asset Tag,Asset Name,Employee,Employee ID,Department,Assigned Date,Returned Date,Status');
+      
+      assignments.forEach(assignment => {
+        csvRows.push([
+          `"${(assignment.assetId?.assetTag || assignment.assetTag || '').replace(/"/g, '""')}"`,
+          `"${(assignment.assetId?.name || assignment.assetName || '').replace(/"/g, '""')}"`,
+          `"${(assignment.employeeName || '').replace(/"/g, '""')}"`,
+          `"${(assignment.employeeId || '').replace(/"/g, '""')}"`,
+          `"${(assignment.department || '').replace(/"/g, '""')}"`,
+          `"${(assignment.assignmentDate || '').replace(/"/g, '""')}"`,
+          `"${(assignment.returnedDate || '').replace(/"/g, '""')}"`,
+          `"${(assignment.status || '').replace(/"/g, '""')}"`
+        ].join(','));
+      });
+      
+      // Create CSV content
+      const csvContent = csvRows.join('\n');
+      
+      // Create a download link
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `asset-report-${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast.success('Report exported successfully!');
     } catch (error) {
       console.error('Error exporting report:', error);
-      toast.error('Failed to export report.');
+      toast.error('Failed to export report. ' + (error.response?.data?.message || 'Please try again.'));
     }
   };
 
@@ -222,7 +262,7 @@ const AssignmentHistory = () => {
       <div className="container">
         <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
             <p className="text-gray-600">Loading assignment history...</p>
           </div>
         </div>
@@ -239,7 +279,7 @@ const AssignmentHistory = () => {
             <div className="flex items-center space-x-4">
               <button 
                 onClick={() => navigate(-1)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-emerald-600 rounded-lg transition-colors"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -253,7 +293,7 @@ const AssignmentHistory = () => {
             <div className="flex items-center space-x-3">
               <button 
                 onClick={() => setShowForm(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors flex items-center space-x-2"
               >
                 <Plus className="w-4 h-4" />
                 <span>Add Assignment</span>
@@ -278,13 +318,13 @@ const AssignmentHistory = () => {
                   placeholder="Search by asset, employee, or department..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               >
                 <option value="All Status">All Status</option>
                 <option value="Active">Active</option>
@@ -297,7 +337,7 @@ const AssignmentHistory = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow-sm p-6 transform hover:scale-105 transition-transform duration-200">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">{totalRecords}</div>
+                <div className="text-3xl font-bold text-emerald-600 mb-2">{totalRecords}</div>
                 <div className="text-gray-600">Total Records</div>
               </div>
             </div>
@@ -327,7 +367,7 @@ const AssignmentHistory = () => {
                 <p className="text-gray-500 mb-6">Add your first asset assignment to get started</p>
                 <button 
                   onClick={() => setShowForm(true)}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
                 >
                   Add Assignment
                 </button>
@@ -394,7 +434,7 @@ const AssignmentHistory = () => {
                             </button>
                             <button 
                               onClick={() => handleEdit(assignment)}
-                              className="text-blue-600 hover:text-blue-800 transition-colors"
+                              className="text-emerald-600 hover:text-emerald-800 transition-colors"
                               title="Edit Assignment"
                             >
                               <Edit2 className="w-4 h-4" />
@@ -438,7 +478,7 @@ const AssignmentHistory = () => {
                       value={formData.assetTag}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     />
                   </div>
                   
@@ -450,7 +490,7 @@ const AssignmentHistory = () => {
                       value={formData.assetName}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     />
                   </div>
                   
@@ -462,7 +502,7 @@ const AssignmentHistory = () => {
                       value={formData.employeeName}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     />
                   </div>
                   
@@ -473,7 +513,7 @@ const AssignmentHistory = () => {
                       name="employeeId"
                       value={formData.employeeId}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     />
                   </div>
                   
@@ -484,7 +524,7 @@ const AssignmentHistory = () => {
                       name="department"
                       value={formData.department}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     />
                   </div>
                   
@@ -495,7 +535,7 @@ const AssignmentHistory = () => {
                       name="assignmentDate"
                       value={formData.assignmentDate}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     />
                   </div>
                   
@@ -505,7 +545,7 @@ const AssignmentHistory = () => {
                       name="status"
                       value={formData.status}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     >
                       <option value="Active">Active</option>
                       <option value="Returned">Returned</option>
@@ -516,7 +556,7 @@ const AssignmentHistory = () => {
                     <button
                       type="button"
                       onClick={handleSubmit}
-                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                      className="flex-1 bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 transition-colors"
                     >
                       {editingAssignment ? 'Update Assignment' : 'Add Assignment'}
                     </button>

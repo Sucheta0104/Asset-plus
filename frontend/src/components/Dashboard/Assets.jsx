@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Edit2,Trash2} from 'lucide-react';
+import { Plus, Search, Filter, Edit2, Trash2, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -162,288 +162,154 @@ const AssetManagement = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Available': return 'bg-blue-100 text-blue-800';
-      case 'Assigned': return 'bg-green-100 text-green-800';
-      case 'Under Repair': return 'bg-red-100 text-red-800';
-      case 'Retired': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'Available':
+        return 'bg-green-50 text-green-700 border border-green-200';
+      case 'Assigned':
+        return 'bg-blue-50 text-blue-700 border border-blue-200';
+      case 'Under Repair':
+        return 'bg-yellow-50 text-yellow-700 border border-yellow-200';
+      case 'Retired':
+        return 'bg-red-50 text-red-700 border border-red-200';
+      default:
+        return 'bg-gray-50 text-gray-700 border border-gray-200';
     }
   };
 
   return (
-    <div className="container">
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex justify-between items-start mb-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Assets</h1>
-              <p className="text-gray-600 mt-1">Manage and track all your IT assets</p>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Asset Management</h1>
+              <p className="text-gray-600">Manage and track all company assets</p>
             </div>
-            
-          <Link
-          to="/dashboard/assets/addasset"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-        >
-         <Plus size={16} />
+            <Link
+              to="addasset"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors duration-200 flex items-center gap-2 shadow-sm"
+            >
+              <Plus size={20} />
               Add Asset
-          </Link>
+            </Link>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <div className="bg-red-900 border border-red-400 text-red-200 px-4 py-3 rounded mb-4">
               {error}
             </div>
           )}
 
-          {/* Loading Indicator */}
-          {loading && (
-            <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
-              Loading...
-            </div>
-          )}
 
-          {/* Add Asset Form Modal */}
-          {showAddForm && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-                <h2 className="text-xl font-bold mb-4">{editingAsset ? 'Edit Asset' : 'Add New Asset'}</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Asset Name *</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-                    <select
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    >
-                      <option value="">Select Category</option>
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Status *</label>
-                    <select
-                      name="status"
-                      value={formData.status}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    >
-                      <option value="">Select Status</option>
-                      {statuses.map((status) => (
-                        <option key={status} value={status}>{status}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
-                    <input
-                      type="text"
-                      name="assignedTo"
-                      value={formData.assignedTo}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Leave empty if not assigned"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Location *</label>
-                    <input
-                      type="text"
-                      name="location"
-                      value={formData.location}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Purchase Date *</label>
-                    <input
-                      type="date"
-                      name="purchaseDate"
-                      value={formData.purchaseDate}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Cost *</label>
-                    <input
-                      type="number"
-                      name="cost"
-                      value={formData.cost}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="0.00"
-                      step="0.01"
-                      min="0"
-                      required
-                    />
-                  </div>
-
-                  <div className="flex gap-3 pt-4">
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors disabled:opacity-50"
-                    >
-                      {loading ? (editingAsset ? 'Updating...' : 'Adding...') : (editingAsset ? 'Update Asset' : 'Add Asset')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowAddForm(false);
-                        setEditingAsset(null);
-                        setFormData({
-                          name: '',
-                          category: '',
-                          status: '',
-                          assignedTo: '',
-                          location: '',
-                          purchaseDate: '',
-                          cost: ''
-                        });
-                      }}
-                      className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-md transition-colors"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
 
           {/* Search and Filter */}
-          <div className="bg-white rounded-lg shadow mb-6 p-4">
-            <div className="flex gap-4 items-center">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search assets by name, tag, or category..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                  <input
+                    type="text"
+                    placeholder="Search assets..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
+                  />
+                </div>
               </div>
-              {/* <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                <Filter size={16} />
-                Advanced Search
-              </button> */}
             </div>
           </div>
 
           {/* Assets List */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Assets List</h2>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-800">Assets List</h2>
             </div>
+            <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-100">
+  <thead className="bg-gray-50">
+    <tr>
+      {[
+        'Asset Tag', 'Name', 'Category', 'Status', 
+        'Assigned To', 'Location', 'Purchase Date', 
+        'Cost', 'Actions'
+      ].map((heading) => (
+        <th
+          key={heading}
+          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          {heading}
+        </th>
+      ))}
+    </tr>
+  </thead>
 
-            {filteredAssets.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No assets found</p>
-                <p className="text-gray-400 mt-2">Add your first asset to get started</p>
+  <tbody className="bg-white divide-y divide-gray-100">
+    {filteredAssets.length === 0 ? (
+      <tr>
+        <td colSpan={9} className="text-center py-12">
+          <p className="text-gray-400 text-lg">No assets found</p>
+          <p className="text-gray-400 mt-2">Add your first asset to get started</p>
+        </td>
+      </tr>
+    ) : (
+      filteredAssets.map((asset) => (
+        <tr key={asset._id} className="hover:bg-gray-50 transition-colors">
+          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{asset.assetTag}</td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{asset.name}</td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{asset.category}</td>
+          <td className="px-6 py-4 whitespace-nowrap">
+            <span className={`inline-flex px-2.5 py-1 text-xs font-medium rounded-full ${getStatusColor(asset.status)}`}>
+              {asset.status}
+            </span>
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+            {asset.assignedTo || '-'}
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+            {asset.location}
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+            {asset.purchaseDate}
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+            ${asset.cost?.toLocaleString() || 0}
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleEdit(asset)}
+                className="text-blue-600 hover:text-blue-700 transition-colors"
+                title="Edit Asset"
+              >
+                <Edit2 size={16} />
+              </button>
+              <button
+                onClick={() => handleDelete(asset._id)}
+                className="text-red-600 hover:text-red-700 transition-colors"
+                title="Delete Asset"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
+          </td>
+        </tr>
+      ))
+    )}
+  </tbody>
+</table>
+
               </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Tag</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned To</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purchase Date</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredAssets.map((asset) => (
-                      <tr key={asset._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{asset.assetTag}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{asset.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{asset.category}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(asset.status)}`}>
-                            {asset.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{asset.assignedTo || '-'}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{asset.location}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{asset.purchaseDate}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${asset.cost?.toLocaleString() || 0}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <div className="flex items-center gap-2">
-                            <button 
-                              onClick={() => handleEdit(asset)}
-                              className="text-blue-400 hover:text-blue-600"
-                              title="Edit Asset"
-                            >
-                              <Edit2 size={16} />
-                            </button>
-                            {/* <button 
-                              onClick={() => {
-                                // You can implement download functionality here
-                                console.log('Download asset:', asset.id);
-                              }}
-                              className="text-gray-400 hover:text-gray-600"
-                              title="Download"
-                            >
-                              <Download size={16} />
-                            </button> */}
-                            <button 
-                              onClick={() => handleDelete(asset._id)}
-                              className="text-red-400 hover:text-red-600"
-                              title="Delete Asset"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
 
             {/* Pagination */}
             {/* {filteredAssets.length > 0 && (
-              <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                <button className="flex items-center gap-2 px-3 py-1 text-sm text-gray-500 hover:text-gray-700">
+              <div className="px-6 py-4 border-t border-gray-700 flex items-center justify-between">
+                <button className="flex items-center gap-2 px-3 py-1 text-sm text-gray-400 hover:text-gray-300">
                   <ChevronLeft size={16} />
                   Previous
                 </button>
-                <span className="text-sm text-gray-700">{currentPage}</span>
-                <button className="flex items-center gap-2 px-3 py-1 text-sm text-gray-500 hover:text-gray-700">
+                <span className="text-sm text-gray-300">{currentPage}</span>
+                <button className="flex items-center gap-2 px-3 py-1 text-sm text-gray-400 hover:text-gray-300">
                   Next
                   <ChevronRight size={16} />
                 </button>
