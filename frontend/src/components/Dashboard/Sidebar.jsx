@@ -130,7 +130,7 @@ const Sidebar = () => {
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-blue-100">
           <div className="text-center">
-            <p className="text-gray-600 text-sm"> 2024 AssetPlus</p>
+            <p className="text-gray-600 text-sm">© 2025 AssetPlus</p>
           </div>
         </div>
       </div>
