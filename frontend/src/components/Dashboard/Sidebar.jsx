@@ -65,9 +65,11 @@ const Sidebar = () => {
           overflow-y-auto
         `}
       >
+        {/* Logo Section */}
+      
         {/* Main Menu Header */}
         <nav className="p-4 space-y-2">
-          <h1 className="text-xl font-bold text-gray-900 mb-4 px-2">
+          <h1 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2 px-2">
             Main Menu
           </h1>
  
@@ -128,7 +130,7 @@ const Sidebar = () => {
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-blue-100">
           <div className="text-center">
-            <p className="text-gray-600 text-sm">© 2024 AssetPlus</p>
+            <p className="text-gray-600 text-sm"> 2024 AssetPlus</p>
           </div>
         </div>
       </div>
