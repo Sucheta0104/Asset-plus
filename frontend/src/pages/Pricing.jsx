@@ -117,7 +117,7 @@ export default function Pricing() {
                     ))}
                   </ul>
 
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                  <button className="w-full bg-blue-950 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
                     Choose Plan
                   </button>
                 </div>
@@ -140,7 +140,7 @@ export default function Pricing() {
         <FAQSection /> 
     </section>
       
-        <section className= "py-20 px-6 bg-blue-700 text-center w-full">
+        <section className= "py-20 px-6 bg-blue-950 text-center w-full">
         <div className="justify-center max-w-5xl mx-auto">
           <h2 className="text-4xl font-extrabold text-white mb-4">
             Ready to get started?

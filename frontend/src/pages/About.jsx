@@ -46,7 +46,7 @@ const AboutSection = () => {
 
   return (
     <Layout>
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white overflow-hidden mt-15">
+    <div className="min-h-screen bg-#f2f3f6 text-black overflow-hidden mt-15">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full opacity-20 animate-pulse"></div>
@@ -58,12 +58,12 @@ const AboutSection = () => {
         {/* Header Section */}
         <div className={`text-center mb-20 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6 animate-bounce">
-            <Shield className="w-8 h-8 text-white" />
+            <Shield className="w-8 h-8 text-black" />
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-blue-950 bg-clip-text text-transparent">
             Asset Plus
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-black max-w-3xl mx-auto leading-relaxed">
             Revolutionizing asset management with cutting-edge technology and intuitive design
           </p>
         </div>
@@ -71,8 +71,8 @@ const AboutSection = () => {
         {/* Mission Statement */}
         <div className={`text-center mb-20 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-white">Our Mission</h2>
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-black">Our Mission</h2>
+            <p className="text-lg md:text-xl text-black leading-relaxed">
               At Asset Plus, we believe that effective asset management shouldn't be complicated. 
               Our platform combines powerful analytics, seamless integration, and user-friendly design 
               to help organizations maximize their asset potential while minimizing operational complexity.
@@ -92,8 +92,8 @@ const AboutSection = () => {
               <div className={`text-blue-400 mb-4 transition-all duration-300 ${activeFeature === index ? 'scale-110' : ''}`}>
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">{feature.description}</p>
+              <h3 className="text-xl font-semibold mb-3 text-black">{feature.title}</h3>
+              <p className="text-black text-sm leading-relaxed">{feature.description}</p>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
           ))}
@@ -106,29 +106,29 @@ const AboutSection = () => {
               <div className="flex items-center justify-center mb-3 text-blue-400 group-hover:text-purple-400 transition-colors duration-300">
                 {stat.icon}
               </div>
-              <div className="text-2xl md:text-3xl font-bold text-white mb-1 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-2xl md:text-3xl font-boldtext-black mb-1 group-hover:scale-110 transition-transform duration-300">
                 {stat.number}
               </div>
-              <div className="text-sm text-gray-400">{stat.label}</div>
+              <div className="text-sm text-black">{stat.label}</div>
             </div>
           ))}
         </div>
 
         {/* Company Values */}
         <div className={`text-center mb-16 transition-all duration-1000 delay-900 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-white">Why Choose Asset Plus?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-black">Why Choose Asset Plus?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <div className="group p-8 rounded-2xl bg-gradient-to-br from-blue-500/10 to-transparent border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 hover:scale-105">
               <h3 className="text-xl font-semibold mb-4 text-blue-400 group-hover:text-blue-300 transition-colors duration-300">Innovation First</h3>
-              <p className="text-gray-300">We leverage cutting-edge technology to deliver solutions that stay ahead of industry trends.</p>
+              <p className="text-black">We leverage cutting-edge technology to deliver solutions that stay ahead of industry trends.</p>
             </div>
             <div className="group p-8 rounded-2xl bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
               <h3 className="text-xl font-semibold mb-4 text-purple-400 group-hover:text-purple-300 transition-colors duration-300">Customer-Centric</h3>
-              <p className="text-gray-300">Every feature is designed with your success in mind, backed by dedicated support.</p>
+              <p className="text-black">Every feature is designed with your success in mind, backed by dedicated support.</p>
             </div>
             <div className="group p-8 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 hover:border-cyan-500/50 transition-all duration-300 hover:scale-105">
               <h3 className="text-xl font-semibold mb-4 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300">Scalable Solutions</h3>
-              <p className="text-gray-300">From startups to enterprises, our platform grows with your business needs.</p>
+              <p className="text-black">From startups to enterprises, our platform grows with your business needs.</p>
             </div>
           </div>
         </div>

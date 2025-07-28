@@ -263,7 +263,7 @@ const TestimonialCarousel = () => {
                           {/* Author Info */}
                           <div className="flex items-center gap-4">
                             {/* Avatar with Initials */}
-                            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <div className="w-12 h-12 bg-blue-950 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:scale-110 transition-transform duration-300">
                               {getInitials(testimonial.name)}
                             </div>
                             
@@ -302,11 +302,11 @@ const TestimonialCarousel = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16">
+        {/* <div className="text-center mt-16">
           <button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25">
             Join Our Happy Clients
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

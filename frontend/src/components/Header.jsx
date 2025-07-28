@@ -42,12 +42,12 @@ export default function Header() {
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-600 rounded-md" />
+          <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-950 rounded-md" />
           <span className="font-bold text-xl text-gray-800">AssetPlus</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-6 text-lg">
+        <nav className="hidden md:flex gap-22 text-lg">
           <Link 
             to="/" 
             className={getLinkClasses("/")}
@@ -76,7 +76,7 @@ export default function Header() {
 
         {/* Desktop Sign Up Button */}
         <div className="hidden md:flex gap-2">
-          <Link to="/signup" className="text-gray-700 hover:text-blue-600">
+          <Link to="/signup" className="text-gray-700 hover:text-blue-950">
             <ButtonAnimatedGradient/>
           </Link>
         </div>
