@@ -12,7 +12,7 @@ exports.createAsset = async (req, res) => {
     await Activity.create({
       message: `New asset created: ${asset.name} (${asset.assetTag})`,
       type: 'asset'
-    })
+    });
 
     // 2. Check for upcoming warranty expiry
     const today = new Date();
@@ -28,7 +28,11 @@ exports.createAsset = async (req, res) => {
       });
     }
 
-    res.status(201).json({message: "Asset created successfully"});
+    console.log('✅ Asset created successfully:', asset);
+    res.status(201).json({
+      message: "Asset created successfully",
+      asset: asset
+    });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -37,13 +41,23 @@ exports.createAsset = async (req, res) => {
 // Get all assets
 exports.getallAsset = async (req, res) => {
   try {
+    console.log('🚀 GET /api/asset/ - Fetching all assets');
+    console.log('🔍 Query parameters:', req.query);
+    console.log('🔍 User from token:', req.user);
+    
     const { category } = req.query;
 
     // If category is passed, filter by it. Otherwise, return all.
     const filter = category ? { category } : {};
+    console.log('🔍 Filter applied:', filter);
+    
     const assets = await Asset.find(filter);
+    console.log('✅ Assets found:', assets.length);
+    console.log('📊 Assets data:', assets);
+    
     res.status(200).json(assets);
   } catch (err) {
+    console.error('❌ Error in getallAsset:', err);
     res.status(500).json({ message: err.message });
   }
 };

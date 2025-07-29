@@ -321,7 +321,9 @@ const Maintenance = () => {
                           className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 p-1 rounded text-sm"
                           title="Edit Record"
                         >
-                          ✏️
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/>
+                          </svg>
                         </button>
                         <button
                           onClick={() =>
@@ -330,7 +332,9 @@ const Maintenance = () => {
                           className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200 p-1 rounded text-sm"
                           title="Delete Record"
                         >
-                          🗑️
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                          </svg>
                         </button>
                       </div>
                     </div>
@@ -359,19 +363,9 @@ const Maintenance = () => {
                       </div>
                       <div>
                         <span className="text-gray-500">Status:</span>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-                            log.assetStatus === "Fully Operational"
-                              ? "bg-green-100 text-green-800"
-                              : log.assetStatus === "Needs Follow-up"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : log.assetStatus === "Requires Replacement"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
+                        <div className="text-gray-700 font-medium text-sm">
                           {log.assetStatus}
-                        </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -416,19 +410,9 @@ const Maintenance = () => {
                       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-xs sm:text-sm">{log.maintenanceType}</td>
                       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 font-semibold text-xs sm:text-sm">₹{log.serviceCost}</td>
                       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                        <span
-                          className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-                            log.assetStatus === "Fully Operational"
-                              ? "bg-green-100 text-green-800"
-                              : log.assetStatus === "Needs Follow-up"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : log.assetStatus === "Requires Replacement"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
+                        <div className="text-gray-700 font-medium text-xs sm:text-sm">
                           {log.assetStatus}
-                        </span>
+                        </div>
                       </td>
                       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                         <div className="flex space-x-2 sm:space-x-3">
@@ -437,7 +421,9 @@ const Maintenance = () => {
                             className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 p-1 sm:p-2 rounded-lg hover:bg-blue-50"
                             title="Edit Record"
                           >
-                            ✏️
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/>
+                            </svg>
                           </button>
                           <button
                             onClick={() =>
@@ -446,7 +432,9 @@ const Maintenance = () => {
                             className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200 p-1 sm:p-2 rounded-lg hover:bg-red-50"
                             title="Delete Record"
                           >
-                            🗑️
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                            </svg>
                           </button>
                         </div>
                       </td>
@@ -628,65 +616,64 @@ const Maintenance = () => {
                   required
                 >
                   <option value="">Select maintenance type...</option>
-                  <option value="Routine Inspection">Routine Inspection</option>
-                  <option value="Repair Work">Repair Work</option>
-                  <option value="Cleaning Service">Cleaning Service</option>
-                  <option value="Parts Replacement">Parts Replacement</option>
-                  <option value="Software Update">Software Update</option>
-                  <option value="Calibration">Calibration</option>
+                  <option value="Preventive">Preventive Maintenance</option>
+                  <option value="Corrective">Corrective Maintenance</option>
+                  <option value="Emergency">Emergency Repair</option>
+                  <option value="Routine">Routine Check</option>
+                  <option value="Upgrade">Upgrade/Replacement</option>
                 </select>
               </div>
 
-              {/* Technician and Cost */}
+              {/* Technician Name */}
+              <div
+                className="animate-fadeIn"
+                style={{ animationDelay: "300ms" }}
+              >
+                <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-2 sm:mb-3">
+                  Technician Name *
+                </label>
+                <input
+                  type="text"
+                  value={technicianName}
+                  onChange={(e) => setTechnicianName(e.target.value)}
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
+                  placeholder="Enter technician name"
+                  required
+                />
+              </div>
+
+              {/* Service Cost and Parts Used */}
               <div
                 className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 animate-fadeIn"
-                style={{ animationDelay: "300ms" }}
+                style={{ animationDelay: "400ms" }}
               >
                 <div>
                   <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-2 sm:mb-3">
-                    Technician Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={technicianName}
-                    onChange={(e) => setTechnicianName(e.target.value)}
-                    placeholder="Enter technician name"
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-2 sm:mb-3">
-                    Service Cost *
+                    Service Cost (₹) *
                   </label>
                   <input
                     type="number"
                     value={serviceCost}
                     onChange={(e) => setServiceCost(e.target.value)}
-                    placeholder="0.00"
-                    step="0.01"
-                    min="0"
                     className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
                     required
                   />
                 </div>
-              </div>
-
-              {/* Parts Used */}
-              <div
-                className="animate-fadeIn"
-                style={{ animationDelay: "400ms" }}
-              >
-                <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-2 sm:mb-3">
-                  Parts Used
-                </label>
-                <textarea
-                  value={partsUsed}
-                  onChange={(e) => setPartsUsed(e.target.value)}
-                  placeholder="List any parts that were replaced or used during maintenance..."
-                  rows="3"
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
-                />
+                <div>
+                  <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-2 sm:mb-3">
+                    Parts Used
+                  </label>
+                  <input
+                    type="text"
+                    value={partsUsed}
+                    onChange={(e) => setPartsUsed(e.target.value)}
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
+                    placeholder="Enter parts used (optional)"
+                  />
+                </div>
               </div>
 
               {/* Work Description */}
@@ -700,83 +687,81 @@ const Maintenance = () => {
                 <textarea
                   value={workDescription}
                   onChange={(e) => setWorkDescription(e.target.value)}
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
                   placeholder="Describe the maintenance work performed..."
                   rows="4"
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
                   required
                 />
               </div>
 
-              {/* Next Service Date */}
+              {/* Next Service Date and Asset Status */}
               <div
-                className="animate-fadeIn"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 animate-fadeIn"
                 style={{ animationDelay: "600ms" }}
               >
-                <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-2 sm:mb-3">
-                  Next Service Due
-                </label>
-                <input
-                  type="date"
-                  value={nextServiceDate}
-                  onChange={(e) => setNextServiceDate(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
-                />
-              </div>
-
-              {/* Asset Status */}
-              <div
-                className="animate-fadeIn"
-                style={{ animationDelay: "700ms" }}
-              >
-                <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-2 sm:mb-3">
-                  Asset Status After Service *
-                </label>
-                <select
-                  value={assetStatus}
-                  onChange={(e) => setAssetStatus(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
-                  required
-                >
-                  <option value="">Select status...</option>
-                  <option value="Fully Operational">Fully Operational</option>
-                  <option value="Needs Follow-up">Needs Follow-up</option>
-                  <option value="Requires Replacement">
-                    Requires Replacement
-                  </option>
-                  <option value="Out of Service">Out of Service</option>
-                </select>
+                <div>
+                  <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-2 sm:mb-3">
+                    Next Service Date
+                  </label>
+                  <input
+                    type="date"
+                    value={nextServiceDate}
+                    onChange={(e) => setNextServiceDate(e.target.value)}
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-2 sm:mb-3">
+                    Asset Status *
+                  </label>
+                  <select
+                    value={assetStatus}
+                    onChange={(e) => setAssetStatus(e.target.value)}
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-orange-300 text-xs sm:text-sm md:text-base"
+                    required
+                  >
+                    <option value="">Select status...</option>
+                    <option value="Working">Working</option>
+                    <option value="Needs Follow-up">Needs Follow-up</option>
+                    <option value="Out of Service">Out of Service</option>
+                    <option value="Under Warranty">Under Warranty</option>
+                    <option value="Replaced">Replaced</option>
+                  </select>
+                </div>
               </div>
 
               {/* Submit Button */}
               <div
-                className="pt-3 sm:pt-4 md:pt-6 animate-fadeIn flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 md:space-x-4"
-                style={{ animationDelay: "800ms" }}
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fadeIn"
+                style={{ animationDelay: "700ms" }}
               >
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 hover:scale-105 transform disabled:scale-100 shadow-lg hover:shadow-xl text-xs sm:text-sm md:text-base flex-1 sm:flex-none"
+                  className="flex-1 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 hover:scale-105 transform shadow-lg hover:shadow-xl disabled:hover:scale-100 text-sm sm:text-base md:text-lg"
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-white border-t-transparent"></div>
-                      <span>{isEditing ? "Updating..." : "Logging..."}</span>
+                      <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-white border-t-transparent"></div>
+                      <span>
+                        {isEditing ? "Updating..." : "Logging..."}
+                      </span>
                     </>
                   ) : (
                     <>
-                      <span>{isEditing ? "✏️" : "🔧"}</span>
+                      <span>💾</span>
                       <span>
-                        {isEditing ? "Update Maintenance" : "Log Maintenance"}
+                        {isEditing ? "Update Record" : "Log Maintenance"}
                       </span>
                     </>
                   )}
                 </button>
-
+                
                 {isEditing && (
                   <button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 hover:scale-105 transform shadow-lg hover:shadow-xl text-xs sm:text-sm md:text-base flex-1 sm:flex-none"
+                    className="flex-1 sm:flex-none bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 hover:scale-105 transform shadow-lg hover:shadow-xl text-sm sm:text-base md:text-lg"
                   >
                     <span>❌</span>
                     <span>Cancel</span>
@@ -787,97 +772,6 @@ const Maintenance = () => {
           </form>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes countUp {
-          from {
-            opacity: 0;
-            transform: scale(0.5);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        .animate-slideDown {
-          animation: slideDown 0.6s ease-out;
-        }
-
-        .animate-slideUp {
-          animation: slideUp 0.6s ease-out;
-        }
-
-        .animate-slideIn {
-          animation: slideIn 0.6s ease-out;
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out;
-        }
-
-        .animate-countUp {
-          animation: countUp 0.8s ease-out;
-        }
-
-        /* Responsive improvements for very small screens */
-        @media (max-width: 320px) {
-          .text-xl { font-size: 1.1rem; }
-          .text-2xl { font-size: 1.3rem; }
-          .text-3xl { font-size: 1.5rem; }
-          .px-3 { padding-left: 0.5rem; padding-right: 0.5rem; }
-          .py-3 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-        }
-
-        /* Better touch targets for mobile */
-        @media (max-width: 640px) {
-          button, select, input, textarea {
-            min-height: 44px;
-          }
-        }
-      `}</style>
     </div>
   );
 };

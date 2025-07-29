@@ -1,5 +1,20 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Calendar, DollarSign, MapPin, Package, Tag, User, Building, Hash, Monitor, FileText } from 'lucide-react';
+import axios from 'axios';
+
+// Add axios interceptor setup
+axios.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
 // ✅ Move this OUTSIDE of AddAssetForm
 const InputField = ({
@@ -125,17 +140,63 @@ export default function AddAssetForm() {
   };
 
   const handleSubmit = async () => {
+   
     setIsSubmitting(true);
     setSubmitMessage('');
     setMessageType('');
 
     try {
-      // Simulate API call since we can't use axios in this environment
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      // Prepare data for API
+      const assetData = {
+        assetTag: formData.assetTag,
+        name: formData.name,
+        category: formData.category,
+        brand: formData.brand,
+        model: formData.model,
+        serialNumber: formData.serialNumber,
+        purchaseDate: formData.purchaseDate,
+        cost: parseFloat(formData.cost) || 0,
+        vendor: formData.vendor,
+        location: formData.location,
+        warrantyExpiry: formData.warrantyExpiry,
+        description: formData.description,
+        department: formData.department,
+        status: 'Available' // Default status
+      };
+
+      console.log('Creating asset with data:', assetData);
+
+      // Make API call to create asset
+      const response = await axios.post('http://localhost:5000/api/asset', assetData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Asset created successfully:', response.data);
       
-      // Simulate successful response
+      // Trigger data refresh in other components
+      window.dispatchEvent(new CustomEvent('assetDataChanged', {
+        detail: { type: 'asset_created', data: response.data }
+      }));
+      
+      // If vendor was specified, also trigger vendor data change
+      if (formData.vendor && formData.vendor.trim()) {
+        window.dispatchEvent(new CustomEvent('vendorDataChanged', {
+          detail: { type: 'vendor_referenced', vendor: formData.vendor, asset: response.data }
+        }));
+      }
+      
       setSubmitMessage('Asset created successfully!');
       setMessageType('success');
+      
+      // Reset form
       setFormData({
         assetTag: '',
         name: '',
@@ -158,7 +219,18 @@ export default function AddAssetForm() {
       }, 5000);
 
     } catch (error) {
-      setSubmitMessage('Failed to create asset. Please try again.');
+      console.error('Error creating asset:', error);
+      
+      let errorMessage = 'Failed to create asset. Please try again.';
+      if (error.response?.status === 401) {
+        errorMessage = 'Authentication failed. Please login again.';
+        localStorage.removeItem('token');
+        window.location.href = '/';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
+      setSubmitMessage(errorMessage);
       setMessageType('error');
 
       setTimeout(() => {

@@ -117,6 +117,10 @@ const Reports = () => {
       setMaintenanceData(processedMaintenanceData);
       setVendorData(processedVendorData);
 
+      // Debug logging for vendor data
+      console.log('Vendor data fetched:', processedVendorData);
+      console.log('Vendor data length:', processedVendorData.length);
+
       // Initialize charts after data is loaded
       setTimeout(initializeCharts, 100);
     } catch (error) {
@@ -418,7 +422,9 @@ const Reports = () => {
     }
 
     // Vendor Portfolio - Enhanced Polar Area Chart
+    console.log('Initializing vendor chart with data:', vendorData);
     if (vendorData.length > 0 && vendorChartRef.current) {
+      console.log('Vendor chart conditions met, creating chart...');
       const ctx = vendorChartRef.current.getContext('2d');
 
       if (chartInstances.current.vendor) {
@@ -479,13 +485,40 @@ const Reports = () => {
   useEffect(() => {
     fetchReportsData();
 
-    // Cleanup charts on unmount
+    // Set up auto-refresh every 30 seconds to catch new vendor additions
+    const refreshInterval = setInterval(() => {
+      fetchReportsData();
+    }, 30000);
+
+    // Listen for asset/vendor data changes
+    const handleDataChange = (event) => {
+      console.log('Data changed, refreshing reports...', event.detail);
+      fetchReportsData();
+    };
+    
+    window.addEventListener('assetDataChanged', handleDataChange);
+    window.addEventListener('vendorDataChanged', handleDataChange);
+
+    // Cleanup charts, interval, and event listeners on unmount
     return () => {
       Object.values(chartInstances.current).forEach(chart => {
         if (chart) chart.destroy();
       });
+      clearInterval(refreshInterval);
+      window.removeEventListener('assetDataChanged', handleDataChange);
+      window.removeEventListener('vendorDataChanged', handleDataChange);
     };
   }, []);
+
+  // Initialize charts when data changes
+  useEffect(() => {
+    if (!isLoading && (departmentData.length > 0 || assetCostData.length > 0 || maintenanceData.length > 0 || vendorData.length > 0)) {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        initializeCharts();
+      }, 100);
+    }
+  }, [departmentData, assetCostData, maintenanceData, vendorData, isLoading]);
 
   // Enhanced Stat Card Component
   const StatCard = ({ title, value, icon, trend, loading = false, iconColor = "text-blue-600" }) => (
@@ -503,7 +536,7 @@ const Reports = () => {
               </div>
             )}
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <div className="text-2xl font-bold text-gray-900">
             {loading ? (
               <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
             ) : value === '₹0' || value === 0 || value === '0' ? (
@@ -511,7 +544,7 @@ const Reports = () => {
             ) : (
               value
             )}
-          </p>
+          </div>
         </div>
         <div className="p-3 rounded-lg bg-gray-50">
           {React.cloneElement(icon, { className: `w-6 h-6 ${iconColor}` })}
@@ -577,6 +610,19 @@ const Reports = () => {
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Asset Analytics</h1>
             <p className="text-gray-600">Comprehensive insights into your asset portfolio performance</p>
+          </div>
+          <div className="flex items-center space-x-3 mt-4 md:mt-0">
+            <div className="text-xs text-gray-500">
+              Auto-refreshes every 30s
+            </div>
+            <button 
+              onClick={fetchReportsData}
+              className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 disabled:opacity-50"
+              disabled={isLoading}
+            >
+              <FiRefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <span>Refresh Data</span>
+            </button>
           </div>
         </div>
       </div>

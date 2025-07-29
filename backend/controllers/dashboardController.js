@@ -1,7 +1,7 @@
-const Asset = require('../models/AssetSchema');
+const Asset = require('../models/AssetSchema.js');
 const moment = require('moment');
-const Activity = require('../models/ActivitySchema')
-const Alert = require('../models/AlertSchema')
+const Activity = require('../models/ActivitySchema.js')
+const Alert = require('../models/AlertSchema.js')
 
 // Summary endpoint: total, assigned, underRepair, AMC due
 exports.getDashboardSummary = async (req, res) => {
