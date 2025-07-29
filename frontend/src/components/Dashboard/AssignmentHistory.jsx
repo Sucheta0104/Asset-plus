@@ -429,13 +429,13 @@ const AssignmentHistory = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex space-x-2">
-                              <button 
+                              {/* <button 
                                 onClick={() => handleView(assignment)}
                                 className="text-gray-400 hover:text-gray-600 transition-colors"
                                 title="View Details"
                               >
                                 <Eye className="w-4 h-4" />
-                              </button>
+                              </button> */}
                               <button 
                                 onClick={() => handleEdit(assignment)}
                                 className="text-emerald-600 hover:text-emerald-800 transition-colors"

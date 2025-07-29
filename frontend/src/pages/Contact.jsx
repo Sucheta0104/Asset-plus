@@ -24,7 +24,7 @@ const ButtonCrossArrow = ({ onClick, children, className = "", disabled = false 
     className={`inline-flex items-center justify-center px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-semibold rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
   >
     <span className="mr-2">{children || "Send Message"}</span>
-    <Send className="w-4 h-4" />
+    <Send className="w-3 h-3" />
   </button>
 );
 
@@ -267,7 +267,7 @@ export default function Contact() {
                     <ButtonCrossArrow 
                       type="submit"
                       disabled={isSubmitting}
-                      className={`px-6 py-2 text-sm`}
+                      className={`px-6 py-2 text-xl`}
                     >
                       {isSubmitting ? 'Sending...' : 'Send Message'}
                     </ButtonCrossArrow>

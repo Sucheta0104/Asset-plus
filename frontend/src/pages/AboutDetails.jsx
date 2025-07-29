@@ -1,6 +1,5 @@
 import React from 'react';
-// import Layout from '../components/Layout';
-// import ButtonHoverOutLine from '../ui/KnowMore';
+
 import { TrendingUp, Shield, Users, Award, Target, Zap } from 'lucide-react';
 
 export default function AboutPage() {
