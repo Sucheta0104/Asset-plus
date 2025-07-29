@@ -246,7 +246,7 @@ const AssetManagement = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         
         {/* Header Section */}
@@ -339,96 +339,68 @@ const AssetManagement = () => {
                   )}
                 </div>
               ) : (
-                /* Desktop View - Table */
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-100">
-                    <thead className="bg-gradient-to-r from-gray-50 to-blue-50">
+                <div className="p-4">
+                  <table className="w-full text-sm text-left text-gray-500">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                       <tr>
-                        {[
-                          'Asset Tag', 'Name', 'Category', 'Status', 
-                          'Assigned To', 'Location', 'Purchase Date', 
-                          'Cost', 'Actions'
-                        ].map((heading) => (
-                          <th
-                            key={heading}
-                            className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                          >
-                            {heading}
-                          </th>
-                        ))}
+                        <th scope="col" className="py-3 px-6">
+                          Asset Tag
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Name
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Category
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Status
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Location
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Purchase Date
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Cost
+                        </th>
+                        <th scope="col" className="py-3 px-6">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
-
-                    <tbody className="bg-white divide-y divide-gray-50">
-                      {filteredAssets.length === 0 ? (
-                        <tr>
-                          <td colSpan={9} className="text-center py-16">
-                            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                              <Search className="w-10 h-10 text-gray-400" />
-                            </div>
-                            <p className="text-gray-500 text-xl font-medium mb-2">No assets found</p>
-                            <p className="text-gray-400">Add your first asset to get started</p>
+                    <tbody>
+                      {filteredAssets.map((asset) => (
+                        <tr key={asset._id} className="bg-white border-b hover:bg-gray-50">
+                          <td className="py-4 px-6">{asset.assetTag}</td>
+                          <td className="py-4 px-6">{asset.name}</td>
+                          <td className="py-4 px-6">{asset.category}</td>
+                          <td className="py-4 px-6">
+                            <span className={`inline-flex px-2.5 py-1 text-xs font-medium rounded-full ${getStatusColor(asset.status)}`}>
+                              {asset.status}
+                            </span>
+                          </td>
+                          <td className="py-4 px-6">{asset.location}</td>
+                          <td className="py-4 px-6">{new Date(asset.purchaseDate).toLocaleString()}</td>
+                          <td className="py-4 px-6">${asset.cost?.toLocaleString() || 0}</td>
+                          <td className="py-4 px-6">
+                            <button
+                              onClick={() => handleEdit(asset)}
+                              className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-200 transform hover:scale-105"
+                              title="Edit Asset"
+                            >
+                              <Edit2 size={16} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(asset._id)}
+                              className="p-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-all duration-200 transform hover:scale-105"
+                              title="Delete Asset"
+                            >
+                              <Trash2 size={16} />
+                            </button>
                           </td>
                         </tr>
-                      ) : (
-                        filteredAssets.map((asset, index) => (
-                          <tr 
-                            key={asset._id} 
-                            className={`hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 ${
-                              index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
-                            }`}
-                          >
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-mono font-medium text-gray-900 bg-gray-50 rounded-lg mx-2 my-1">
-                              {asset.assetTag}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                              {asset.name}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                              <span className="inline-flex px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
-                                {asset.category}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className={`inline-flex px-3 py-1.5 text-xs font-medium rounded-full ${getStatusColor(asset.status)}`}>
-                                {asset.status}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                              {asset.assignedTo || (
-                                <span className="text-gray-400 italic">Unassigned</span>
-                              )}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium">
-                              {asset.location}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                              {asset.purchaseDate}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                              ${asset.cost?.toLocaleString() || 0}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              <div className="flex items-center gap-1">
-                                <button
-                                  onClick={() => handleEdit(asset)}
-                                  className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-200 transform hover:scale-105"
-                                  title="Edit Asset"
-                                >
-                                  <Edit2 size={16} />
-                                </button>
-                                <button
-                                  onClick={() => handleDelete(asset._id)}
-                                  className="p-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-all duration-200 transform hover:scale-105"
-                                  title="Delete Asset"
-                                >
-                                  <Trash2 size={16} />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      )}
+                      ))}
                     </tbody>
                   </table>
                 </div>

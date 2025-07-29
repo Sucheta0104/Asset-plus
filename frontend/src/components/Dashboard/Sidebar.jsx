@@ -23,15 +23,14 @@ const Sidebar = () => {
   };
 
   // Define menu items with their full paths and an 'end' property
-  // 'end: false' means the link is active if the URL starts with the path (e.g., /dashboard for /dashboard/assets)
   // 'end: true' means the link is active only if the URL is an exact match
   const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', end: false },
-    { name: 'Assets', icon: Package, path: '/dashboard/assets', end: true },
-    { name: 'Assignment', icon: UserCheck, path: '/dashboard/assignment', end: true },
-    { name: 'Vendor', icon: Building2, path: '/dashboard/vendor', end: true },
-    { name: 'Maintainance', icon: Wrench, path: '/dashboard/maintainance', end: true },
-    { name: 'Reports', icon: BarChart3, path: '/dashboard/reports', end: true }
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', end: true },
+    { name: 'Assets', icon: Package, path: '/dashboard/assets', end: false },
+    { name: 'Assignment', icon: UserCheck, path: '/dashboard/assignment', end: false },
+    { name: 'Vendor', icon: Building2, path: '/dashboard/vendor', end: false },
+    { name: 'Maintainance', icon: Wrench, path: '/dashboard/maintainance', end: false },
+    { name: 'Reports', icon: BarChart3, path: '/dashboard/reports', end: false }
   ];
 
   // Toggles the mobile menu open/close state

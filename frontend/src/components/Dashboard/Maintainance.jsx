@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Edit2, Trash2 } from 'lucide-react';
 
 const Maintenance = () => {
   const [selectedAsset, setSelectedAsset] = useState("");
@@ -318,23 +319,17 @@ const Maintenance = () => {
                       <div className="flex space-x-2">
                         <button
                           onClick={() => handleEdit(log)}
-                          className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 p-1 rounded text-sm"
+                          className="p-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-200 transform hover:scale-105"
                           title="Edit Record"
                         >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/>
-                          </svg>
+                          <Edit2 size={16} />
                         </button>
                         <button
-                          onClick={() =>
-                            deleteMaintenanceRecord(log.id || log._id)
-                          }
-                          className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200 p-1 rounded text-sm"
+                          onClick={() => deleteMaintenanceRecord(log.id || log._id)}
+                          className="p-1 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-all duration-200 transform hover:scale-105"
                           title="Delete Record"
                         >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                          </svg>
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </div>
@@ -409,32 +404,24 @@ const Maintenance = () => {
                       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm">{log.technicianName}</td>
                       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-xs sm:text-sm">{log.maintenanceType}</td>
                       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 font-semibold text-xs sm:text-sm">₹{log.serviceCost}</td>
-                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                        <div className="text-gray-700 font-medium text-xs sm:text-sm">
-                          {log.assetStatus}
-                        </div>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-gray-700 font-medium text-xs sm:text-sm">
+                        {log.assetStatus}
                       </td>
                       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                         <div className="flex space-x-2 sm:space-x-3">
                           <button
                             onClick={() => handleEdit(log)}
-                            className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 p-1 sm:p-2 rounded-lg hover:bg-blue-50"
+                            className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-200 transform hover:scale-105"
                             title="Edit Record"
                           >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/>
-                            </svg>
+                            <Edit2 size={16} />
                           </button>
                           <button
-                            onClick={() =>
-                              deleteMaintenanceRecord(log.id || log._id)
-                            }
-                            className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200 p-1 sm:p-2 rounded-lg hover:bg-red-50"
+                            onClick={() => deleteMaintenanceRecord(log.id || log._id)}
+                            className="p-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-all duration-200 transform hover:scale-105"
                             title="Delete Record"
                           >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                            </svg>
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </td>
