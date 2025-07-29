@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import { ArrowLeft } from 'lucide-react'; // Add this import
 import 'react-toastify/dist/ReactToastify.css';
 
 const SignUpForm = () => {
@@ -12,7 +13,7 @@ const SignUpForm = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  // const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -25,10 +26,10 @@ const SignUpForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!agreeToTerms) {
-      toast.warning('Please agree to receive updates and special offers');
-      return;
-    }
+    // if (!agreeToTerms) {
+    //   toast.warning('Please agree to receive updates and special offers');
+    //   return;
+    // }
 
     const { email, password } = formData;
     setLoading(true);
@@ -52,8 +53,8 @@ const SignUpForm = () => {
         toast.success('Login successful!');
         
         // Reset form
-        setFormData({ email: '', password: '' });
-        setAgreeToTerms(false);
+        // setFormData({ email: '', password: '' });
+        // setAgreeToTerms(false);
         
         // Redirect to dashboard
         navigate('/dashboard');
@@ -70,14 +71,29 @@ const SignUpForm = () => {
     }
   };
 
+  // Add navigation handler
+  const handleBackToHome = () => {
+    navigate('/');
+  };
+
   return (
-    <div className="min-h-screen bg-white/20 backdrop-blur-md flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-white/20 backdrop-blur-md flex items-center justify-center px-4 py-8 relative">
+      {/* Add back button */}
+      
+
       <div className="max-w-6xl w-full">
         <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white/20">
           <div className="flex flex-col lg:flex-row">
             {/* Left side - Form */}
             <div className="lg:w-1/2 p-8 lg:p-12">
-              <div className="max-w-md mx-auto">
+                 <button 
+                    onClick={handleBackToHome}
+                   className="absolute top-4 left-4 p-2 flex items-center text-gray-600 hover:text-blue-600 transition-colors duration-200 rounded-lg hover:bg-gray-100"
+                     >
+                    <ArrowLeft className="w-6 h-6 mr-1" />
+                   <span className="text-sm font-medium">Back to Home</span>
+                  </button>
+              <div className="max-w-md mx-auto mt-5">
                 <h1 className="text-3xl font-bold text-gray-800 mb-2">Sign in</h1>
                 <p className="text-gray-600 mb-8">
                   Don't have an account?{' '}
@@ -118,7 +134,7 @@ const SignUpForm = () => {
                       />
                     </div>
 
-                    <div className="flex items-start space-x-3 mt-4">
+                    {/* <div className="flex items-start space-x-3 mt-4">
                       <input
                         type="checkbox"
                         id="terms"
@@ -129,7 +145,7 @@ const SignUpForm = () => {
                       <label htmlFor="terms" className="text-sm mt-1 text-gray-600">
                         By Signing up you agree to receive updates and special Offers.
                       </label>
-                    </div>
+                    </div> */}
 
                     {error && (
                       <div className="text-red-500 text-sm mb-4">

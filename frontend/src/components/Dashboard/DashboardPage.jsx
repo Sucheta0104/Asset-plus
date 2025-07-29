@@ -153,8 +153,8 @@ const Dashboard = () => {
 
   // Calculate statistics
   const totalAssets = assets.length;
-  const assignedAssets = assets.filter(asset => asset.status === 'Assigned').length;
-  const underRepair = assets.filter(asset => asset.status === 'UnderRepair').length;
+  const assignedAssets = assets.filter(asset => asset.status === 'assigned').length;
+  const underRepair = assets.filter(asset => asset.status === 'under-repair').length;
   const amcDue = assets.filter(asset => asset.status === 'amc-due').length;
   const criticalRepairs = assets.filter(asset => asset.status === 'under-repair' && asset.priority === 'critical').length;
   const utilizationRate = totalAssets > 0 ? Math.round((assignedAssets / totalAssets) * 100) : 0;

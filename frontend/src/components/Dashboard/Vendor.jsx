@@ -250,7 +250,7 @@ const VendorManagementForm = () => {
     }
 
     // Phone validation (basic)
-    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+    const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
     if (!phoneRegex.test(formData.phoneNumber.replace(/\s|-/g, ''))) {
       setError('Please enter a valid phone number');
       return;
@@ -387,7 +387,7 @@ const VendorManagementForm = () => {
                 disabled={loading}
               >
                 <ArrowLeft size={20} />
-                <span className="font-medium">Back to Vendors</span>
+                {/* <span className="font-medium">Back to Vendors</span> */}
               </button>
               <h1 className="text-2xl font-bold text-gray-800">
                 {editingVendor ? 'Edit Vendor' : 'Add New Vendor'}

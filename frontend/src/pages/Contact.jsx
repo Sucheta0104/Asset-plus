@@ -9,22 +9,55 @@ import {
   Clock,
   MessageCircle,
   Send,
-  } from 'lucide-react';
+  CheckCircle,
+  AlertCircle
+} from 'lucide-react';
 import { FaTwitter } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 
-
-
 // Mock ButtonCrossArrow component since it's not available
-const ButtonCrossArrow = ({ onClick, children, className = "" }) => (
+const ButtonCrossArrow = ({ onClick, children, className = "", disabled = false }) => (
   <button 
     onClick={onClick}
-    className={`inline-flex items-center justify-center px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-semibold rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 ${className}`}
+    disabled={disabled}
+    className={`inline-flex items-center justify-center px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-semibold rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
   >
     <span className="mr-2">{children || "Send Message"}</span>
     <Send className="w-4 h-4" />
   </button>
+);
+
+// Success Message Component
+const SuccessMessage = ({ message, onClose }) => (
+  <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center space-x-3">
+    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+    <div className="flex-1">
+      <p className="text-green-800 font-medium">{message}</p>
+    </div>
+    <button 
+      onClick={onClose}
+      className="text-green-500 hover:text-green-700 transition-colors"
+    >
+      ×
+    </button>
+  </div>
+);
+
+// Error Message Component
+const ErrorMessage = ({ message, onClose }) => (
+  <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center space-x-3">
+    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+    <div className="flex-1">
+      <p className="text-red-800 font-medium">{message}</p>
+    </div>
+    <button 
+      onClick={onClose}
+      className="text-red-500 hover:text-red-700 transition-colors"
+    >
+      ×
+    </button>
+  </div>
 );
 
 export default function Contact() {
@@ -36,6 +69,8 @@ export default function Contact() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+  const [statusMessage, setStatusMessage] = useState('');
 
   const handleInputChange = (e) => {
     setFormData({
@@ -47,44 +82,71 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    console.log('Form submitted:', formData);
-    setIsSubmitting(false);
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
+    setSubmitStatus(null);
 
-    alert('Message sent successfully!');
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Success
+        setSubmitStatus('success');
+        setStatusMessage(data.message || 'Message sent successfully!');
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        // Error from server
+        setSubmitStatus('error');
+        setStatusMessage(data.message || 'Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      // Network or other error
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+      setStatusMessage('Network error. Please check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const closeStatusMessage = () => {
+    setSubmitStatus(null);
+    setStatusMessage('');
   };
 
   const contactInfo = [
     {
       icon: Mail,
       title: "Email Us",
-      content: "hello@company.com",
+      content: "info@itpluspoint.com",
       subContent: "support@company.com",
       color: "from-blue-500 to-cyan-500"
     },
     {
       icon: Phone,
       title: "Call Us",
-      content: "+1 (555) 123-4567",
+      content: "HR : +91 9658 745 188",
       subContent: "+1 (555) 987-6543",
       color: "from-green-500 to-emerald-500"
     },
     {
       icon: MapPin,
       title: "Visit Us",
-      content: "123 Business Street",
-      subContent: "New York, NY 10001",
+      content: "ITPlusPoint Solutions Pvt. Ltd. ISO 9001:2015",
+      subContent: "MIG –II, 14/5, Housing Board Colony, Chandrasekharpur, Bhubaneswar, Odisha – 751016, India",
       color: "from-purple-500 to-pink-500"
     },
     {
@@ -119,17 +181,27 @@ export default function Contact() {
           <div className="w-full max-w-4xl mx-auto space-y-12 md:space-y-16">
             {/* Contact Form */}
             <div className="bg-white shadow-2xl rounded-3xl p-6 md:p-8 lg:p-12">
-                {/* <div className="flex items-center justify-center mb-6 md:mb-8">
-                  <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-full">
-                    <MessageCircle className="w-6 h-6 md:w-8 md:h-8 text-white" />
-                  </div>
-                </div> */}
                 
                 <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6 md:mb-8">
                   Send us a Message
                 </h2>
 
-                <div className="space-y-4 md:space-y-6">
+                {/* Status Messages */}
+                {submitStatus === 'success' && (
+                  <SuccessMessage 
+                    message={statusMessage} 
+                    onClose={closeStatusMessage}
+                  />
+                )}
+                
+                {submitStatus === 'error' && (
+                  <ErrorMessage 
+                    message={statusMessage} 
+                    onClose={closeStatusMessage}
+                  />
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                   {/* Name and Email */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                     <div className="relative">
@@ -141,7 +213,8 @@ export default function Contact() {
                         onChange={handleInputChange}
                         placeholder="Your Name"
                         required
-                        className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 bg-gray-50 focus:bg-white transition-all duration-200 text-sm md:text-base"
+                        disabled={isSubmitting}
+                        className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 bg-gray-50 focus:bg-white transition-all duration-200 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
 
@@ -154,7 +227,8 @@ export default function Contact() {
                         onChange={handleInputChange}
                         placeholder="Your Email"
                         required
-                        className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 bg-gray-50 focus:bg-white transition-all duration-200 text-sm md:text-base"
+                        disabled={isSubmitting}
+                        className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 bg-gray-50 focus:bg-white transition-all duration-200 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
                   </div>
@@ -169,7 +243,8 @@ export default function Contact() {
                       onChange={handleInputChange}
                       placeholder="Subject"
                       required
-                      className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 bg-gray-50 focus:bg-white transition-all duration-200 text-sm md:text-base"
+                      disabled={isSubmitting}
+                      className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 bg-gray-50 focus:bg-white transition-all duration-200 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
 
@@ -182,21 +257,23 @@ export default function Contact() {
                       placeholder="Your message..."
                       rows="5"
                       required
-                      className="w-full p-3 md:p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 resize-none bg-gray-50 focus:bg-white transition-all duration-200 text-sm md:text-base"
+                      disabled={isSubmitting}
+                      className="w-full p-3 md:p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 resize-none bg-gray-50 focus:bg-white transition-all duration-200 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                     ></textarea>
                   </div>
 
                   {/* Submit Button */}
                   <div className="flex justify-center pt-2 md:pt-4">
                     <ButtonCrossArrow 
-                      onClick={handleSubmit}
-                      className={`px-6 py-2 text-sm ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
+                      type="submit"
+                      disabled={isSubmitting}
+                      className={`px-6 py-2 text-sm`}
                     >
                       {isSubmitting ? 'Sending...' : 'Send Message'}
                     </ButtonCrossArrow>
                   </div>
-                </div>
-                          </div>
+                </form>
+            </div>
 
             {/* Get in Touch Section */}
             <div className="space-y-6 md:space-y-8">
@@ -267,15 +344,6 @@ export default function Contact() {
                   </a>
                 </div>
               </div>
-
-              {/* Map placeholder */}
-              {/* <div className="bg-gray-200 rounded-2xl h-48 md:h-64 mb-8">
-                <div className="text-center p-4">
-                  <MapPin className="w-8 h-8 md:w-12 md:h-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500 font-medium text-sm md:text-base">Interactive Map</p>
-                  <p className="text-xs md:text-sm text-gray-400 mt-1">123 Business Street, New York, NY 10001</p>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>

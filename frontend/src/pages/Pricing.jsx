@@ -4,6 +4,8 @@ import FAQSection from '../components/FAQ';
 
 export default function Pricing() {
   const [isAnnual, setIsAnnual] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState('');
 
   const plans = [
     {
@@ -30,6 +32,16 @@ export default function Pricing() {
     },
   ];
 
+  const handleChoosePlan = (planName) => {
+    setSelectedPlan(planName);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedPlan('');
+  };
+
   // const calculateSavings = (monthly, annual) => {
   //   const annualTotal = annual * 12;
   //   const monthlyTotal = monthly * 12;
@@ -38,7 +50,7 @@ export default function Pricing() {
 
   return (
     <Layout>
-      <section className="py-20 px-6 bg-gray-50 text-center">
+      <section className="py-20 px-6 bg-white text-center">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
             Simple, Transparent Pricing
@@ -58,7 +70,7 @@ export default function Pricing() {
                   checked={isAnnual}
                   onChange={(e) => setIsAnnual(e.target.checked)}
                 />
-                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 peer-focus:ring-4 peer-focus:ring-blue-300 transition-all duration-300">
+                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-950 peer-focus:ring-4 peer-focus:ring-blue-300 transition-all duration-300">
                   <div className={`absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full transition-transform duration-300 ${isAnnual ? 'translate-x-5' : ''}`}></div>
                 </div>
               </label>
@@ -117,7 +129,10 @@ export default function Pricing() {
                     ))}
                   </ul>
 
-                  <button className="w-full bg-blue-950 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                  <button 
+                    onClick={() => handleChoosePlan(plan.name)}
+                    className="w-full bg-blue-950 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+                  >
                     Choose Plan
                   </button>
                 </div>
@@ -138,17 +153,71 @@ export default function Pricing() {
           </div>
         </div>
         <FAQSection /> 
-    </section>
+      </section>
       
-        <section className= "py-20 px-6 bg-blue-950 text-center w-full">
+      <section className="py-20 px-6 bg-blue-950 text-center w-full">
         <div className="justify-center max-w-5xl mx-auto">
           <h2 className="text-4xl font-extrabold text-white mb-4">
             Ready to get started?
           </h2>
-          <p className="text-2xl  text-white mb-4">Join thousands of IT teams who trust AssetPlus to manage their assets.</p>
+          <p className="text-2xl text-white mb-4">Join thousands of IT teams who trust AssetPlus to manage their assets.</p>
         </div>
-
       </section>
+
+      {/* Success Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Backdrop with blur */}
+          <div 
+            className="fixed inset-0 bg-white bg-opacity-90 backdrop-blur-sm"
+            onClick={closeModal}
+          ></div>
+          
+          {/* Modal Content */}
+          <div className="relative bg-white rounded-2xl p-8 mx-4 max-w-md w-full shadow-2xl transform transition-all duration-300 scale-100">
+            {/* Close button */}
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Success Icon */}
+            <div className="text-center mb-6">
+              <div className="mx-auto flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Successfully choose a plan!
+              </h3>
+              <h4 className="text-xl font-semibold text-green-600 mb-4">
+                Congratulations!!
+              </h4>
+              
+              <p className="text-gray-600 mb-2">
+                You have successfully selected the <span className="font-semibold text-blue-600">{selectedPlan}</span> plan.
+              </p>
+              <p className="text-sm text-gray-500">
+                Our team will contact you shortly to complete the setup process.
+              </p>
+            </div>
+
+            {/* Action Button */}
+            <button
+              onClick={closeModal}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
