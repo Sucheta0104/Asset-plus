@@ -26,8 +26,7 @@ const assetSchema = new mongoose.Schema({
   serialNumber: {
     type: String,
     required: false,
-    unique: false,
-    trim: false,
+    trim: true,
   },
   purchaseDate: {
     type: Date,
@@ -54,7 +53,7 @@ const assetSchema = new mongoose.Schema({
   status: {
     type: String,
     required: false,
-    enum: ["Assigned", "Available", "UnderRepair"]
+    enum: ["Assigned", "Available", "Under Repair"]
   },
   department: {
   type: String,

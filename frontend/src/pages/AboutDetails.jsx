@@ -11,7 +11,7 @@ export default function AboutPage() {
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="text-white">
-                <h1 className="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                <h1 className="text-5xl lg:text-5xl font-bold mb-6 leading-tight">
                   About 
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
                     {' '}AssetPlus

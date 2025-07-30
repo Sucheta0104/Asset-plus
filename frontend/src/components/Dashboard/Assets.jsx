@@ -2,27 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Edit2, Trash2, X, Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import EditAssetModal from './EditAssetModal';
 
 const AssetManagement = () => {
   const [assets, setAssets] = useState([]);
-  const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [editingAsset, setEditingAsset] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    category: '',
-    status: '',
-    assignedTo: '',
-    location: '',
-    purchaseDate: '',
-    cost: ''
-  });
-
-  // const categories = ['IT', 'Furniture', 'Vehicle'];
-  // const statuses = ['Available', 'Assigned', 'Under Repair', 'Retired'];
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [assetToDelete, setAssetToDelete] = useState(null);
 
   // Check screen size for responsive behavior
   useEffect(() => {
@@ -59,110 +52,80 @@ const AssetManagement = () => {
     return `AST-${nextId.toString().padStart(3, '0')}`;
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const handleDeleteClick = (asset) => {
+    setAssetToDelete(asset);
+    setShowDeleteModal(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleDeleteConfirm = async () => {
+    if (!assetToDelete) return;
     
-    if (!formData.name || !formData.category || !formData.status || !formData.location || !formData.purchaseDate || !formData.cost) {
-      alert('Please fill in all required fields');
-      return;
-    }
-
     try {
       setLoading(true);
+      await axios.delete(`http://localhost:5000/api/asset/${assetToDelete._id}`);
       
-      if (editingAsset) {
-        // Update existing asset
-        const updatedAsset = {
-          ...formData,
-          cost: parseFloat(formData.cost)
-        };
-         console.log(updatedAsset)
-        console.log(editingAsset)
-        const response = await axios.put(`http://localhost:5000/api/asset/${editingAsset._id}`, updatedAsset);
-       
-        // Update asset in local state
-        setAssets(prev => prev.map(asset => 
-          asset.id === editingAsset._id ? { ...editingAsset, ...response.data } : asset
-        ));
-        
-        alert('Asset updated successfully!');
-        setEditingAsset(null);
-      } else {
-        // Create new asset
-        const newAsset = {
-          assetTag: generateAssetTag(),
-          ...formData,
-          cost: parseFloat(formData.cost)
-        };
-// console.log()
-        const response = await axios.post('http://localhost:5000/api/asset', newAsset);
-        
-        // Add the new asset to the local state
-        setAssets(prev => [...prev, response.data]);
-        
-        alert('Asset added successfully!');
-      }
+      // Remove asset from local state
+      setAssets(prev => prev.filter(asset => asset.id !== assetToDelete._id));
       
-      // Reset form
-      setFormData({
-        name: '',
-        category: '',
-        status: '',
-        assignedTo: '',
-        location: '',
-        purchaseDate: '',
-        cost: ''
+      // Show success toast
+      toast.success(`Asset "${assetToDelete.name}" deleted successfully!`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
       });
-      setShowAddForm(false);
-      
     } catch (err) {
-      setError(editingAsset ? 'Failed to update asset. Please try again.' : 'Failed to add asset. Please try again.');
-      console.error('Error saving asset:', err);
+      setError('Failed to delete asset. Please try again.');
+      console.error('Error deleting asset:', err);
+      
+      // Show error toast
+      toast.error('Failed to delete asset. Please try again.', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } finally {
       setLoading(false);
+      setShowDeleteModal(false);
+      setAssetToDelete(null);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this asset?')) {
-      try {
-        setLoading(true);
-        await axios.delete(`http://localhost:5000/api/asset/${id}`);
-        
-        // Remove asset from local state
-        setAssets(prev => prev.filter(asset => asset.id !== id));
-        
-        alert('Asset deleted successfully!');
-      } catch (err) {
-        setError('Failed to delete asset. Please try again.');
-        console.error('Error deleting asset:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setAssetToDelete(null);
   };
 
-  const handleEdit = async (asset) => {
-    // Set the form data with the asset to edit
-    setFormData({
-      name: asset.name,
-      category: asset.category,
-      status: asset.status,
-      assignedTo: asset.assignedTo || '',
-      location: asset.location,
-      purchaseDate: asset.purchaseDate,
-      cost: asset.cost.toString()
-    });
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditingAsset(null);
+  };
+
+  const handleEdit = (asset) => {
     setEditingAsset(asset);
-    setShowAddForm(true);
+    setShowEditModal(true);
+  };
+
+  const handleUpdateAsset = (updatedAsset) => {
+    setAssets(prev => prev.map(asset => 
+      asset._id === updatedAsset._id ? updatedAsset : asset
+    ));
+    setError('');
+    
+    // Show success toast for update
+    toast.success(`Asset "${updatedAsset.name}" updated successfully!`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   const filteredAssets = assets.filter(asset =>
@@ -186,26 +149,97 @@ const AssetManagement = () => {
     }
   };
 
+  // Delete Confirmation Modal Component
+  const DeleteModal = () => {
+    if (!showDeleteModal || !assetToDelete) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 overflow-y-auto">
+        {/* Backdrop with blur effect */}
+        <div className="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-sm transition-all duration-300" onClick={handleDeleteCancel}></div>
+        
+        {/* Modal */}
+        <div className="flex min-h-full items-center justify-center p-2 sm:p-4 md:p-6 lg:p-8">
+          <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all duration-300 scale-100">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                Delete Asset
+              </h3>
+              <button
+                onClick={handleDeleteCancel}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+              >
+                <X size={18} className="sm:w-5 sm:h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="px-4 sm:px-6 py-3 sm:py-4">
+              <div className="flex items-start mb-4">
+                <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+                </div>
+                <div className="ml-3 sm:ml-4 flex-1">
+                  <p className="text-sm sm:text-base text-gray-900 font-medium">
+                    Are you sure you want to delete this asset?
+                  </p>
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-3 sm:p-4 mb-4">
+                <div className="text-xs sm:text-sm space-y-1">
+                  <p className="font-medium text-gray-900 truncate">{assetToDelete.name}</p>
+                  <p className="text-gray-600">Tag: {assetToDelete.assetTag}</p>
+                  <p className="text-gray-600 truncate">Category: {assetToDelete.category}</p>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                This action cannot be undone. The asset will be permanently removed from the system.
+              </p>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 rounded-b-xl">
+              <button
+                onClick={handleDeleteCancel}
+                className="w-full sm:w-auto px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={loading}
+                className="w-full sm:w-auto px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? 'Deleting...' : 'Delete Asset'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Mobile Card Component for Assets
   const AssetCard = ({ asset }) => (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 p-4 mb-4">
+    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
       <div className="flex justify-between items-start mb-3">
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-900 text-lg mb-1">{asset.name}</h3>
-          <p className="text-sm text-gray-500 font-mono">{asset.assetTag}</p>
+          <h3 className="font-medium text-gray-900 mb-1">{asset.name}</h3>
+          <p className="text-sm text-gray-500">{asset.assetTag}</p>
         </div>
-        <div className="flex items-center gap-2 ml-4">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => handleEdit(asset)}
-            className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
-            title="Edit Asset"
+            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
           >
             <Edit2 size={16} />
           </button>
           <button
-            onClick={() => handleDelete(asset._id)}
-            className="p-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors"
-            title="Delete Asset"
+            onClick={() => handleDeleteClick(asset)}
+            className="p-1.5 text-red-600 hover:bg-red-50 rounded"
           >
             <Trash2 size={16} />
           </button>
@@ -214,101 +248,89 @@ const AssetManagement = () => {
       
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div>
-          <span className="text-gray-500 block mb-1">Category</span>
-          <span className="font-medium text-gray-900">{asset.category}</span>
+          <span className="text-gray-500">Category</span>
+          <p className="font-medium text-gray-900">{asset.category}</p>
         </div>
         <div>
-          <span className="text-gray-500 block mb-1">Status</span>
-          <span className={`inline-flex px-2.5 py-1 text-xs font-medium rounded-full ${getStatusColor(asset.status)}`}>
+          <span className="text-gray-500">Status</span>
+          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${getStatusColor(asset.status)}`}>
             {asset.status}
           </span>
         </div>
         <div>
-          <span className="text-gray-500 block mb-1">Location</span>
-          <span className="font-medium text-gray-900">{asset.location}</span>
+          <span className="text-gray-500">Location</span>
+          <p className="font-medium text-gray-900">{asset.location}</p>
         </div>
         <div>
-          <span className="text-gray-500 block mb-1">Cost</span>
-          <span className="font-medium text-gray-900">${asset.cost?.toLocaleString() || 0}</span>
+          <span className="text-gray-500">Cost</span>
+          <p className="font-medium text-gray-900">${asset.cost?.toLocaleString() || 0}</p>
         </div>
         {asset.assignedTo && (
           <div className="col-span-2">
-            <span className="text-gray-500 block mb-1">Assigned To</span>
-            <span className="font-medium text-gray-900">{asset.assignedTo}</span>
+            <span className="text-gray-500">Assigned To</span>
+            <p className="font-medium text-gray-900">{asset.assignedTo}</p>
           </div>
         )}
         <div className="col-span-2">
-          <span className="text-gray-500 block mb-1">Purchase Date</span>
-          <span className="font-medium text-gray-900">{asset.purchaseDate}</span>
+          <span className="text-gray-500">Purchase Date</span>
+          <p className="font-medium text-gray-900">{asset.purchaseDate}</p>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         
         {/* Header Section */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 mb-6 lg:mb-8">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-6">
-            <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-1">
                 Asset Management
               </h1>
-              <p className="text-gray-600 text-sm sm:text-base">
-                Manage and track all company assets efficiently
+              <p className="text-gray-600">
+                Manage and track all company assets
               </p>
             </div>
             <Link
               to="addasset"
-              className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium"
             >
-              <Plus size={20} />
-              <span className="whitespace-nowrap">Add Asset</span>
+              <Plus size={18} />
+              Add Asset
             </Link>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl mt-4 flex items-start gap-3">
-              <div className="w-5 h-5 rounded-full bg-rose-200 flex-shrink-0 mt-0.5"></div>
+            <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mt-4">
               <span className="text-sm">{error}</span>
             </div>
           )}
         </div>
 
         {/* Search Section */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 lg:p-6 mb-6 lg:mb-8">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search by name, tag, or category..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all duration-200"
-                />
-              </div>
-            </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Search by name, tag, or category..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
           </div>
         </div>
 
         {/* Assets Display Section */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-4 sm:px-6 lg:px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-blue-50">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl lg:text-2xl font-semibold text-gray-800">
-                Assets ({filteredAssets.length})
-              </h2>
-              {!isMobileView && (
-                <div className="text-sm text-gray-500">
-                  {filteredAssets.length === 0 ? 'No assets found' : `Showing ${filteredAssets.length} asset${filteredAssets.length !== 1 ? 's' : ''}`}
-                </div>
-              )}
-            </div>
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h2 className="text-lg font-semibold text-gray-800">
+              Assets ({filteredAssets.length})
+            </h2>
           </div>
 
           {/* Loading State */}
@@ -326,10 +348,8 @@ const AssetManagement = () => {
                 <div className="p-4">
                   {filteredAssets.length === 0 ? (
                     <div className="text-center py-12">
-                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Search className="w-8 h-8 text-gray-400" />
-                      </div>
-                      <p className="text-gray-500 text-lg font-medium mb-2">No assets found</p>
+                      <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-500 font-medium mb-2">No assets found</p>
                       <p className="text-gray-400">Add your first asset to get started</p>
                     </div>
                   ) : (
@@ -339,68 +359,91 @@ const AssetManagement = () => {
                   )}
                 </div>
               ) : (
-                <div className="p-4">
-                  <table className="w-full text-sm text-left text-gray-500">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                /* Desktop View - Table */
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
                       <tr>
-                        <th scope="col" className="py-3 px-6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Asset Tag
                         </th>
-                        <th scope="col" className="py-3 px-6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Name
                         </th>
-                        <th scope="col" className="py-3 px-6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Category
                         </th>
-                        <th scope="col" className="py-3 px-6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Status
                         </th>
-                        <th scope="col" className="py-3 px-6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Location
                         </th>
-                        <th scope="col" className="py-3 px-6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Purchase Date
                         </th>
-                        <th scope="col" className="py-3 px-6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Cost
                         </th>
-                        <th scope="col" className="py-3 px-6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Actions
                         </th>
                       </tr>
                     </thead>
-                    <tbody>
-                      {filteredAssets.map((asset) => (
-                        <tr key={asset._id} className="bg-white border-b hover:bg-gray-50">
-                          <td className="py-4 px-6">{asset.assetTag}</td>
-                          <td className="py-4 px-6">{asset.name}</td>
-                          <td className="py-4 px-6">{asset.category}</td>
-                          <td className="py-4 px-6">
-                            <span className={`inline-flex px-2.5 py-1 text-xs font-medium rounded-full ${getStatusColor(asset.status)}`}>
-                              {asset.status}
-                            </span>
-                          </td>
-                          <td className="py-4 px-6">{asset.location}</td>
-                          <td className="py-4 px-6">{new Date(asset.purchaseDate).toLocaleString()}</td>
-                          <td className="py-4 px-6">${asset.cost?.toLocaleString() || 0}</td>
-                          <td className="py-4 px-6">
-                            <button
-                              onClick={() => handleEdit(asset)}
-                              className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-200 transform hover:scale-105"
-                              title="Edit Asset"
-                            >
-                              <Edit2 size={16} />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(asset._id)}
-                              className="p-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-all duration-200 transform hover:scale-105"
-                              title="Delete Asset"
-                            >
-                              <Trash2 size={16} />
-                            </button>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {filteredAssets.length === 0 ? (
+                        <tr>
+                          <td colSpan="8" className="px-6 py-12 text-center">
+                            <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                            <p className="text-gray-500 font-medium mb-2">No assets found</p>
+                            <p className="text-gray-400">Add your first asset to get started</p>
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        filteredAssets.map((asset) => (
+                          <tr key={asset._id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              {asset.assetTag}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                              {asset.name}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              {asset.category}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${getStatusColor(asset.status)}`}>
+                                {asset.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              {asset.location}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              {new Date(asset.purchaseDate).toLocaleDateString()}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              ${asset.cost?.toLocaleString() || 0}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => handleEdit(asset)}
+                                  className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
+                                >
+                                  <Edit2 size={16} />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteClick(asset)}
+                                  className="p-1.5 text-red-600 hover:bg-red-50 rounded"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -409,6 +452,31 @@ const AssetManagement = () => {
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteModal />
+
+      {/* Edit Asset Modal */}
+      <EditAssetModal
+        asset={editingAsset}
+        isOpen={showEditModal}
+        onClose={handleCloseEditModal}
+        onUpdate={handleUpdateAsset}
+      />
+
+      {/* Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };

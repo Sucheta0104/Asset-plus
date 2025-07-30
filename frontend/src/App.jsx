@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import About from "./pages/About";
 import SignUpForm from "./pages/SignUpForm";
+import SignIn from "./pages/SignIn";
 import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
 import { Route, Routes } from "react-router-dom";
@@ -15,6 +16,7 @@ import { ToastContainer } from 'react-toastify';
 import AssignmentHistory from "./components/Dashboard/AssignmentHistory";
 import Addasset from "./components/Dashboard/Addasset";
 import RegistrationPage  from "./pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -26,16 +28,20 @@ function App() {
         <Route path="/Pricing" element={<Pricing />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/signup" element={<SignUpForm />} />
+        <Route path="/signin" element={<SignIn />} />
         <Route path="/register" element={<RegistrationPage/>}/>
 
         {/* Dashboard Layout with nested routes */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<DashboardPage />} />
           <Route path="assets">
             <Route index element={<Assets/>}/>
             <Route path="addasset" element={<Addasset/>}/>
             </Route> 
-          {/* <Route path="assets" element={<Assets/>} /> */}
           <Route path="assignment">
             <Route index element={<Assignment />} />
             <Route path="assignmenthistory" element={<AssignmentHistory />} />

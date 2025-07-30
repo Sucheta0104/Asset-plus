@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { ArrowLeft } from 'lucide-react'; // Add this import
+import { ArrowLeft, Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles } from 'lucide-react';
+import { useAuth } from '../components/context/AuthContext';
 import 'react-toastify/dist/ReactToastify.css';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  // const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -25,47 +26,21 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // if (!agreeToTerms) {
-    //   toast.warning('Please agree to receive updates and special offers');
-    //   return;
-    // }
 
     const { email, password } = formData;
     setLoading(true);
     setError(false);
     
     try {
-      const response = await axios.post('http://localhost:5000/api/user/login', {
-        email,
-        password
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.data?.token) {
-        // Save token to localStorage
-        localStorage.setItem('token', response.data.token);
-        
-        // Show success message
-        toast.success('Login successful!');
-        
-        // Reset form
-        // setFormData({ email: '', password: '' });
-        // setAgreeToTerms(false);
-        
-        // Redirect to dashboard
+      const result = await login(email, password);
+      if (result.success) {
         navigate('/dashboard');
       } else {
-        throw new Error('Invalid response from server');
+        setError(true);
       }
-      
     } catch (error) {
       console.error('Login error:', error);
       setError(true);
-      toast.error(error.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -77,204 +52,197 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white/20 backdrop-blur-md flex items-center justify-center px-4 py-8 relative">
-      {/* Add back button */}
-      
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 relative overflow-hidden">
+      {/* Subtle Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 right-20 w-64 h-64 bg-blue-100/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-64 h-64 bg-indigo-100/30 rounded-full blur-3xl"></div>
+      </div>
 
-      <div className="max-w-6xl w-full">
-        <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white/20">
-          <div className="flex flex-col lg:flex-row">
-            {/* Left side - Form */}
-            <div className="lg:w-1/2 p-8 lg:p-12">
-                 <button 
-                    onClick={handleBackToHome}
-                   className="absolute top-4 left-4 p-2 flex items-center text-gray-600 hover:text-blue-600 transition-colors duration-200 rounded-lg hover:bg-gray-100"
-                     >
-                    <ArrowLeft className="w-6 h-6 mr-1" />
-                   <span className="text-sm font-medium">Back to Home</span>
-                  </button>
-              <div className="max-w-md mx-auto mt-5">
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Sign in</h1>
-                <p className="text-gray-600 mb-8">
-                  Don't have an account?{' '}
-                  <a href="/register" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200">
-                    Register here
-                  </a>
-                </p>
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 py-8">
+        {/* Back Button */}
+        <button 
+          onClick={handleBackToHome}
+          className="absolute top-4 left-4 p-3 flex items-center text-slate-600 hover:text-slate-800 transition-colors duration-200 rounded-lg hover:bg-white/50 backdrop-blur-sm z-20"
+        >
+          <ArrowLeft className="w-5 h-5 mr-2" />
+          <span className="text-sm font-medium">Back to Home</span>
+        </button>
 
-                <div className="space-y-6">
-                  <form onSubmit={handleSubmit}>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Email id</label>
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/30">
+          <div className="flex flex-col lg:flex-row min-h-[600px]">
+            {/* Left Side - Form */}
+            <div className="lg:w-1/2 p-8 lg:p-12 flex items-center justify-center">
+              <div className="w-full max-w-md">
+                {/* Header */}
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-slate-600 to-slate-700 rounded-xl shadow-sm mb-6">
+                    <Sparkles className="w-7 h-7 text-white" />
+                  </div>
+                  <h1 className="text-3xl font-semibold text-slate-800 mb-2">
+                    Welcome Back
+                  </h1>
+                  <p className="text-slate-600 text-base">
+                    Sign in to your AssetPlus account
+                  </p>
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Email Field */}
+                  <div className="group">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Email Address
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Mail className="w-5 h-5 text-slate-400 group-focus-within:text-slate-600 transition-colors duration-200" />
+                      </div>
                       <input
-                        name="email"
                         type="email"
+                        name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-0 transition-colors duration-200 ${
-                          error ? 'border-red-300 bg-red-50' : 'border-gray-200 focus:border-blue-500'
+                        className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 bg-white/80 ${
+                          error ? 'border-red-300 bg-red-50' : 'border-slate-200'
                         }`}
-                        placeholder="Enter your email here"
+                        placeholder="Enter your email"
                         required
                       />
                     </div>
+                  </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                  {/* Password Field */}
+                  <div className="group">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Lock className="w-5 h-5 text-slate-400 group-focus-within:text-slate-600 transition-colors duration-200" />
+                      </div>
                       <input
+                        type={showPassword ? 'text' : 'password'}
                         name="password"
-                        type="password"
                         value={formData.password}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-0 transition-colors duration-200 ${
-                          error ? 'border-red-300 bg-red-50' : 'border-gray-200 focus:border-blue-500'
+                        className={`w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 bg-white/80 ${
+                          error ? 'border-red-300 bg-red-50' : 'border-slate-200'
                         }`}
-                        placeholder="Enter your password here"
+                        placeholder="Enter your password"
                         required
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-slate-600 transition-colors duration-200"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-5 h-5 text-slate-400" />
+                        ) : (
+                          <Eye className="w-5 h-5 text-slate-400" />
+                        )}
+                      </button>
                     </div>
+                  </div>
 
-                    {/* <div className="flex items-start space-x-3 mt-4">
-                      <input
-                        type="checkbox"
-                        id="terms"
-                        checked={agreeToTerms}
-                        onChange={(e) => setAgreeToTerms(e.target.checked)}
-                        className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <label htmlFor="terms" className="text-sm mt-1 text-gray-600">
-                        By Signing up you agree to receive updates and special Offers.
-                      </label>
-                    </div> */}
+                  {error && (
+                    <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
+                      Invalid email or password. Please try again.
+                    </div>
+                  )}
 
-                    {error && (
-                      <div className="text-red-500 text-sm mb-4">
-                        Invalid email or password. Please try again.
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-slate-700 hover:bg-slate-800 text-white py-3 px-6 rounded-lg font-medium shadow-sm hover:shadow-md transform hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group"
+                  >
+                    {loading ? (
+                      <div className="flex items-center justify-center">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Signing in...
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center">
+                        Sign In
+                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
                       </div>
                     )}
+                  </button>
 
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-fit bg-blue-950 text-white py-3 px-6 mt-10 rounded-xl hover:bg-blue-700 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    >
-                      {loading ? (
-                        <div className="flex items-center justify-center">
-                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Creating Account...
-                        </div>
-                      ) : (
-                        'Sign in'
-                      )}
-                    </button>
-                  </form>
-                </div>
+                  {/* Sign Up Link */}
+                  <div className="text-center pt-4">
+                    <p className="text-slate-600 text-sm">
+                      Don't have an account?{' '}
+                      <Link
+                        to="/register"
+                        className="text-slate-700 hover:text-slate-900 font-medium transition-colors duration-200 hover:underline"
+                      >
+                        Create one here
+                      </Link>
+                    </p>
+                  </div>
+                </form>
               </div>
             </div>
 
-            {/* Right side - Illustration */}
-            <div className="lg:w-1/2 bg-white/30 backdrop-blur-sm p-8 lg:p-12 flex items-center justify-center">
-              <div className="max-w-md w-full">
-                {/* Modern Illustration */}
-                <div className="relative">
-                  <svg viewBox="0 0 400 350" className="w-full h-auto">
-                    {/* Background Elements */}
-                    <defs>
-                      <linearGradient id="phoneGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#3B82F6" />
-                        <stop offset="100%" stopColor="#1E40AF" />
-                      </linearGradient>
-                      <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#EFF6FF" />
-                        <stop offset="100%" stopColor="#DBEAFE" />
-                      </linearGradient>
-                      <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feDropShadow dx="0" dy="10" stdDeviation="10" floodColor="#1E40AF" floodOpacity="0.2"/>
-                      </filter>
-                    </defs>
+            {/* Right Side - Image/Illustration */}
+            <div className="lg:w-1/2 bg-gradient-to-br from-slate-700 to-slate-800 p-8 lg:p-12 flex items-center justify-center relative overflow-hidden">
+              {/* Subtle Background Pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-10 left-10 w-16 h-16 border border-white rounded-full"></div>
+                <div className="absolute top-32 right-16 w-8 h-8 border border-white rounded-full"></div>
+                <div className="absolute bottom-20 left-20 w-12 h-12 border border-white rounded-full"></div>
+              </div>
 
-                    {/* Floating Elements */}
-                    <circle cx="80" cy="60" r="6" fill="#60A5FA" opacity="0.6">
-                      <animate attributeName="cy" values="60;50;60" dur="3s" repeatCount="indefinite"/>
-                    </circle>
-                    <circle cx="350" cy="100" r="4" fill="#34D399" opacity="0.7">
-                      <animate attributeName="cy" values="100;90;100" dur="2.5s" repeatCount="indefinite"/>
-                    </circle>
-                    <circle cx="320" cy="50" r="8" fill="#F59E0B" opacity="0.5">
-                      <animate attributeName="cy" values="50;40;50" dur="4s" repeatCount="indefinite"/>
-                    </circle>
-
-                    {/* Phone Device */}
-                    <rect x="140" y="80" width="120" height="220" rx="20" fill="url(#phoneGradient)" filter="url(#shadow)"/>
-                    <rect x="150" y="100" width="100" height="180" rx="10" fill="url(#screenGradient)"/>
-                    
-                    {/* Phone Screen Content */}
-                    <rect x="160" y="120" width="80" height="4" rx="2" fill="#3B82F6" opacity="0.3"/>
-                    <rect x="160" y="130" width="60" height="4" rx="2" fill="#3B82F6" opacity="0.3"/>
-                    <rect x="160" y="140" width="70" height="4" rx="2" fill="#3B82F6" opacity="0.3"/>
-                    
-                    {/* Profile Icon */}
-                    <circle cx="200" cy="170" r="15" fill="#3B82F6" opacity="0.8"/>
-                    <circle cx="200" cy="165" r="5" fill="white"/>
-                    <path d="M190 180 Q200 175 210 180" stroke="white" strokeWidth="2" fill="none"/>
-
-                    {/* Person Character */}
-                    <g transform="translate(280, 150)">
-                      {/* Body */}
-                      <ellipse cx="0" cy="50" rx="25" ry="35" fill="#3B82F6"/>
-                      {/* Head */}
-                      <circle cx="0" cy="0" r="20" fill="#FED7AA"/>
-                      {/* Hair */}
-                      <path d="M-18 -8 Q0 -25 18 -8 Q15 -20 0 -20 Q-15 -20 -18 -8" fill="#1F2937"/>
-                      {/* Eyes */}
-                      <circle cx="-6" cy="-3" r="2" fill="#1F2937"/>
-                      <circle cx="6" cy="-3" r="2" fill="#1F2937"/>
-                      {/* Smile */}
-                      <path d="M-8 5 Q0 12 8 5" stroke="#1F2937" strokeWidth="1.5" fill="none"/>
-                      {/* Arms */}
-                      <ellipse cx="-30" cy="40" rx="8" ry="20" fill="#FED7AA" transform="rotate(-20)"/>
-                      <ellipse cx="30" cy="40" rx="8" ry="20" fill="#FED7AA" transform="rotate(20)"/>
-                      {/* Hand pointing to phone */}
-                      <circle cx="-35" cy="25" r="6" fill="#FED7AA"/>
-                      
-                      <animateTransform 
-                        attributeName="transform" 
-                        attributeType="XML" 
-                        type="translate"
-                        values="280,150; 280,145; 280,150"
-                        dur="3s" 
-                        repeatCount="indefinite"/>
-                    </g>
-
-                    {/* Additional UI Elements */}
-                    <g opacity="0.6">
-                      <rect x="50" y="200" width="60" height="8" rx="4" fill="#10B981"/>
-                      <rect x="50" y="220" width="40" height="8" rx="4" fill="#F59E0B"/>
-                    </g>
-
-                    {/* Checkmark Animation */}
-                    <g transform="translate(180, 250)">
-                      <circle r="15" fill="#10B981" opacity="0.9"/>
-                      <path d="M-6 0 L-2 4 L6 -4" stroke="white" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                        <animate attributeName="stroke-dasharray" values="0 20; 20 20" dur="2s" repeatCount="indefinite"/>
-                        <animate attributeName="stroke-dashoffset" values="20; 0" dur="2s" repeatCount="indefinite"/>
-                      </path>
-                    </g>
-                  </svg>
-                </div>
-
-                {/* Text content below illustration */}
-                <div className="text-center mt-8">
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">Welcome to AssetPlus</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Join thousands of users who trust AssetPlus for their digital asset management. 
-                    Create your account today and start your journey!
+              {/* Main Content */}
+              <div className="relative z-10 text-center text-white">
+                <div className="mb-8">
+                  <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  <h2 className="text-2xl font-semibold mb-3">AssetPlus</h2>
+                  <p className="text-slate-200 text-base leading-relaxed">
+                    Your complete asset management solution
                   </p>
                 </div>
+
+                {/* Feature List */}
+                <div className="space-y-3 text-left max-w-sm mx-auto">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    <span className="text-slate-200 text-sm">Track all your assets in one place</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    <span className="text-slate-200 text-sm">Real-time monitoring and alerts</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    <span className="text-slate-200 text-sm">Advanced reporting and analytics</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    <span className="text-slate-200 text-sm">Secure and reliable platform</span>
+                  </div>
+                </div>
+
+                {/* Simple Image Placeholder */}
+                <div className="mt-8 p-6 bg-white/5 rounded-lg backdrop-blur-sm">
+                  <div className="w-16 h-16 bg-white/10 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                    <div className="w-8 h-8 bg-white/20 rounded"></div>
+                  </div>
+                  <p className="text-slate-300 text-xs">Dashboard Preview</p>
+                </div>
               </div>
+
+              {/* Subtle Floating Elements */}
+              <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full"></div>
+              <div className="absolute top-1/3 right-1/4 w-1.5 h-1.5 bg-white/15 rounded-full"></div>
+              <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-white/25 rounded-full"></div>
             </div>
           </div>
         </div>

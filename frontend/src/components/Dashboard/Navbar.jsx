@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X, Bell, User, LogOut, Mail } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const profileRef = useRef(null);
+  // const [isProfileOpen, setIsProfileOpen] = useState(false);
+  // const profileRef = useRef(null);
 
   // Mock user data - replace with your actual user data
-  const userData = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    avatar: null // You can add avatar URL here
-  };
+  // const userData = {
+  //   name: "John Doe",
+  //   email: "john.doe@example.com",
+  //   avatar: null // You can add avatar URL here
+  // };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,26 +22,26 @@ const Navbar = () => {
   }, []);
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setIsProfileOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (profileRef.current && !profileRef.current.contains(event.target)) {
+  //       setIsProfileOpen(false);
+  //     }
+  //   };
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, []);
 
-  const handleLogout = () => {
-    // Add your logout logic here
-    console.log('Logging out...');
-    setIsProfileOpen(false);
-    // Example: redirect to login page, clear tokens, etc.
-  };
+  // const handleLogout = () => {
+  //   // Add your logout logic here
+  //   console.log('Logging out...');
+  //   setIsProfileOpen(false);
+  //   // Example: redirect to login page, clear tokens, etc.
+  // };
 
-  const handleProfileClick = () => {
-    setIsProfileOpen(!isProfileOpen);
-  };
+  // const handleProfileClick = () => {
+  //   setIsProfileOpen(!isProfileOpen);
+  // };
 
   return (
     <nav
@@ -79,19 +79,19 @@ const Navbar = () => {
           </button>
           
           {/* Profile Dropdown */}
-          <div className="relative" ref={profileRef}>
+          {/* <div className="relative" ref={profileRef}>
             <button 
               onClick={handleProfileClick}
               className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               <User className="w-4 h-4 text-gray-600" />
-            </button>
+            </button> */}
 
             {/* Dropdown Menu */}
-            {isProfileOpen && (
+            {/* {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                 {/* User Info Section */}
-                <div className="px-4 py-3 border-b border-gray-100">
+                {/* <div className="px-4 py-3 border-b border-gray-100">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
                       <span className="text-white font-medium text-sm">
@@ -104,10 +104,10 @@ const Navbar = () => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */} 
 
                 {/* Menu Items */}
-                <div className="py-1">
+                {/* <div className="py-1">
                   <div className="px-4 py-2">
                     <div className="flex items-center space-x-3">
                       <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -119,10 +119,10 @@ const Navbar = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Logout Section */}
-                <div className="border-t border-gray-100 py-1">
+                {/* <div className="border-t border-gray-100 py-1">
                   <button 
                     onClick={handleLogout}
                     className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
@@ -132,8 +132,8 @@ const Navbar = () => {
                   </button>
                 </div>
               </div>
-            )}
-          </div>
+            )} */}
+          {/* </div> */}
         </div>
       </div>
     </nav>

@@ -470,8 +470,8 @@ const Dashboard = () => {
     };
 
     return (
-      <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
-        <div className="flex items-center justify-between mb-3">
+      <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 ">
+        <div className="flex items-center justify-between mb-2">
           <h3 className="font-semibold text-gray-900">{asset.name}</h3>
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(asset.status)}`}>
             {asset.status.replace('-', ' ')}
